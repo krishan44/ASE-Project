@@ -5,3 +5,5 @@ function MainDashboard(){
         <h2>Hello this is an Test</h2>
     )
 }
+
+export default MainDashboard
