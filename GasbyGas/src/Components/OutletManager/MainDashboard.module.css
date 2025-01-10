@@ -71,7 +71,7 @@
 }
 
 .option:hover{
-    background-color: #FFF;
+    background-color: #edf0f2;
     color: #000;
     border-radius: 10px 0px 0px 10px;
     font-size: 18px;
@@ -82,4 +82,33 @@
     width: 25px;
     margin-right: 10px;
     margin-bottom: 8px;
+}
+
+.selected{
+    background-color: #FFF;
+    color: #000;
+    border-radius: 10px 0px 0px 10px;
+    font-size: 18px;
+}
+
+.Logout{
+    position: relative;
+    top: 150px;
+    left: 100px;
+    cursor: pointer;
+}
+
+.logOutI{
+    width: 24px;
+    height: 32px;
+    position: relative;
+    top: 10px;
+    /* position: absolute;
+    bottom: 20px;
+    right: 20px; */
+    /* z-index: 10; */
+}
+
+.Logout:hover{
+    color: #000;
 }

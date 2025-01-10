@@ -6,6 +6,7 @@ import report from "../../assets/Pannel/report.svg";
 import stock from "../../assets/Pannel/stock.svg";
 import orderstock from "../../assets/Pannel/orderstock.svg";
 import waitlist from "../../assets/Pannel/waitlist.svg";
+import logOut from "../../assets/Pannel/logOut.svg";
 
 function MainDashboard(){
     return(
@@ -19,7 +20,8 @@ function MainDashboard(){
                     <div className={style.routes}>
                         <div className={style.optionContainer}>
                             <img src={dashboard} alt="" className={style.panelIcon}/>
-                            <span className={`${style.option} ${style.selected}`}>Overview</span>
+                            <span className={`${style.option}`}>Overview</span> 
+                            {/* selected is using to show that this section has been selected ${style.selected}  */}
                         </div>
                         <div className={style.optionContainer}>
                             <img src={order} alt="" className={style.panelIcon}/>
@@ -45,6 +47,10 @@ function MainDashboard(){
                             <img src={report} alt="" className={style.panelIcon}/>
                             <span className={style.option}>Report Generation</span>
                         </div>
+                    </div>
+                    <div className={style.Logout}>
+                        <span >Logout </span>
+                        <img src={logOut} className={style.logOutI} alt="LogOut icon" />
                     </div>
                 </div>
             </div>
