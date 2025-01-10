@@ -28,23 +28,23 @@ function Overview() {
                         <div className={style.card}>
                             <img src={orderstock} alt="order Icon" className={style.icon} />
                             <span className={style.cardTitle}>Total Business Orders</span>
-                            <span className={style.number}>43</span>
+                            <span className={style.number}>121</span>
                             <span>New Orders This Month</span>
-                            <span className={style.newOrders}><span>+</span>43</span>
+                            <span className={style.newOrders}><span>+</span>32</span>
                         </div>
                         <div className={style.card}>
                             <img src={stock} alt="order Icon" className={style.icon} />
                             <span className={style.cardTitle}>Total Stock Orders</span>
                             <span className={style.number}>43</span>
-                            <span>New Orders This Month</span>
-                            <span className={style.newOrders}><span>+</span>43</span>
+                            <span>Next Order Day</span>
+                            <span className={style.newOrders}>Monday</span>
                         </div>
                         <div className={style.card}>
                             <img src={waitlist} alt="order Icon" className={style.icon} />
                             <span className={style.cardTitle}>Waitlist Number</span>
-                            <span className={style.number}>43</span>
+                            <span className={style.number}>81</span>
                             <span>New Orders This Month</span>
-                            <span className={style.newOrders}><span>+</span>43</span>
+                            <span className={style.newOrders}><span>+</span>23</span>
                         </div>
                     </div>
                     <div className={style.chartContainer}>
