@@ -1,16 +1,19 @@
+import { useState } from "react";
 import style from "./Overview.module.css"
 import MainDashboard from "./MainDashboard"
 import order from "../../assets/Pannel/order.svg";
 import stock from "../../assets/Pannel/stock.svg";
 import orderstock from "../../assets/Pannel/orderstock.svg";
 import waitlist from "../../assets/Pannel/waitlist.svg";
+import PointStylingChart from "./PointStylingChart";
 
-function Overview(){
-    return(
+function Overview() {
+    const [selectedOption, setSelectedOption] = useState("Overview"); 
+    return (
         <>
             <div className={style.Overview}>
                 <div className={style.sidePannel}>
-                    <MainDashboard/>
+                    <MainDashboard selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
                 </div>
                 <div className={style.overviewContent}>
                     <h2 className={style.sectionName}>Overview</h2>
@@ -44,6 +47,10 @@ function Overview(){
                             <span className={style.newOrders}><span>+</span>43</span>
                         </div>
                     </div>
+                    <div className={style.chartContainer}>
+                        <h3 className={style.chartTitle}>Monthly Sales Data</h3>
+                        <PointStylingChart />  
+                    </div>
                 </div>
             </div>
         </>
@@ -51,4 +58,3 @@ function Overview(){
 }
 
 export default Overview
-

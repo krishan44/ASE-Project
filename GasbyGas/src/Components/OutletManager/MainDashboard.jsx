@@ -8,7 +8,7 @@ import orderstock from "../../assets/Pannel/orderstock.svg";
 import waitlist from "../../assets/Pannel/waitlist.svg";
 import logOut from "../../assets/Pannel/logOut.svg";
 
-function MainDashboard(){
+function MainDashboard({ selectedOption, setSelectedOption }){
     return(
         <>
             <div className={style.Maindashboard}>
@@ -18,38 +18,37 @@ function MainDashboard(){
                         <span>Outlet</span>
                     </div>
                     <div className={style.routes}>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
                             <img src={dashboard} alt="" className={style.panelIcon}/>
-                            <span className={`${style.option}`}>Overview</span> 
-                            {/* selected is using to show that this section has been selected ${style.selected}  */}
+                            <span className={`${style.option} ${selectedOption === "Overview" ? style.selected : ""}`}>Overview</span>
                         </div>
                         <div className={style.optionContainer}>
                             <img src={order} alt="" className={style.panelIcon}/>
-                            <span className={style.option}>Customer Orders</span>
+                            <span className={`${style.option} ${selectedOption === "Customer Orders" ? style.selected : ""}`}>Customer Orders</span>
                         </div>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} >
                             <img src={orderstock} alt="" className={style.panelIcon}/>
-                            <span className={style.option}>Business Orders</span>
+                            <span className={`${style.option} ${selectedOption === "Business Orders" ? style.selected : ""}`}>Business Orders</span>
                         </div>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} >
                             <img src={stock} alt="" className={style.panelIcon}/>
-                            <span className={style.option}>Stock Orders</span>
+                            <span className={`${style.option} ${selectedOption === "Stock Orders" ? style.selected : ""}`}>Stock Orders</span>
                         </div>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} >
                             <img src={waitlist} alt="" className={style.panelIcon}/>
-                            <span className={style.option}>Waitlist Manage</span>
+                            <span className={`${style.option} ${selectedOption === "Waitlist Manage" ? style.selected : ""}`}>Waitlist Manage</span>
                         </div>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} >
                             <img src={Customer} alt="" className={style.panelIcon}/>
-                            <span className={style.option}>Account Manage</span>
+                            <span className={`${style.option} ${selectedOption === "Account Manage" ? style.selected : ""}`}>Account Manage</span>
                         </div>
                         <div className={style.optionContainer}>
                             <img src={report} alt="" className={style.panelIcon}/>
-                            <span className={style.option}>Report Generation</span>
+                            <span className={`${style.option} ${selectedOption === "Report Generation" ? style.selected : ""}`}>Report Generation</span>
                         </div>
                     </div>
                     <div className={style.Logout}>
-                        <span >Logout </span>
+                        <span>Logout</span>
                         <img src={logOut} className={style.logOutI} alt="LogOut icon" />
                     </div>
                 </div>

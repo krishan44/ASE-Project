@@ -60,3 +60,18 @@
     font-weight: 500;
     color: #16C47F;
 }
+
+.chartTitle{
+    font-family: "Poppins", serif;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.chartContainer{
+    background-color: #FFF;
+    width: 89.5%;
+    padding: 20px;
+    margin-top: 10px;
+    margin-left: 40px;
+    border-radius: 10px;
+}
