@@ -16,7 +16,11 @@ function Overview() {
                     <MainDashboard selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
                 </div>
                 <div className={style.overviewContent}>
-                    <h2 className={style.sectionName}>Overview</h2>
+                    <div className={style.SectionHead}>
+                    </div>
+                        <h2 className={style.sectionName}>Overview</h2>
+                        <hr />
+                    
                     <div className={style.cards}>
                         <div className={style.card}>
                             <img src={order} alt="order Icon" className={style.icon} />
