@@ -20,7 +20,7 @@ function customerOrders(){
         return (
             <div className={style.orderItems}>
                 {rowData.order.map((item, index) => (
-                    <div key={index} className={style.orderItem}>{item}</div>
+                    <div key={index} className={index === 0 ? style.firstOrderItem : style.otherOrderItems}>{item}</div>
                 ))}
             </div>
         );
