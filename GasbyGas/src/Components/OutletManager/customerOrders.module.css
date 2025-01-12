@@ -123,3 +123,12 @@
 .dataTable tr:hover {
     background-color: #f5f5f5;
 }
+
+.orderItems {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderItem {
+    margin-bottom: 5px;
+}
