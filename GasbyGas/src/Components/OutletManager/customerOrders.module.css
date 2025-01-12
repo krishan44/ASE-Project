@@ -100,3 +100,8 @@
     border: 1px solid #16C47F;
     transition: 0.2s ease;
 }
+
+.editIcon{
+    height: 20px;
+    width: 20px;
+}
