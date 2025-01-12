@@ -11,8 +11,8 @@
 
 .sectionName{
     display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     letter-spacing: 2px;
     font-size: 24px;
     margin-top: 20px;
@@ -29,6 +29,7 @@
 
 .overviewContent{
     width: 100%;
+    margin-left: 50px;
     background-color: #edf0f2;
 }
 

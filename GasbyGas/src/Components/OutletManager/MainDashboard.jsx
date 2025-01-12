@@ -22,27 +22,27 @@ function MainDashboard({ selectedOption, setSelectedOption }){
                             <img src={dashboard} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Overview" ? style.selected : ""}`}>Overview</span>
                         </div>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Customer Orders")} >
                             <img src={order} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Customer Orders" ? style.selected : ""}`}>Customer Orders</span>
                         </div>
-                        <div className={style.optionContainer} >
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Business Orders")}>
                             <img src={orderstock} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Business Orders" ? style.selected : ""}`}>Business Orders</span>
                         </div>
-                        <div className={style.optionContainer} >
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Stock Orders")} >
                             <img src={stock} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Stock Orders" ? style.selected : ""}`}>Stock Orders</span>
                         </div>
-                        <div className={style.optionContainer} >
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Waitlist Manage")} >
                             <img src={waitlist} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Waitlist Manage" ? style.selected : ""}`}>Waitlist Manage</span>
                         </div>
-                        <div className={style.optionContainer} >
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Account Manage")} >
                             <img src={Customer} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Account Manage" ? style.selected : ""}`}>Account Manage</span>
                         </div>
-                        <div className={style.optionContainer}>
+                        <div className={style.optionContainer} onClick={() => setSelectedOption("Report Generation")}>
                             <img src={report} alt="" className={style.panelIcon}/>
                             <span className={`${style.option} ${selectedOption === "Report Generation" ? style.selected : ""}`}>Report Generation</span>
                         </div>

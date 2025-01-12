@@ -1,0 +1,102 @@
+.sidepanel{
+    height: 100vh;
+    width: 300px;
+}
+
+.customerOrders{
+    display: flex;
+    
+}
+
+.customerOrderContent{
+    background-color: #edf0f2;
+    width: 100%;
+    margin-left: 50px;
+}
+
+.sectionName{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 2px;
+    font-size: 12px;
+    margin-top: 20px;
+    font-weight: 900;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-family: "Manrope", serif;
+}
+
+.table{
+    width: 95%;
+    height: 650px;
+    background-color: #FFF;
+    margin-left: 30px;
+    margin-top: 30px;
+    border-radius: 10px;
+    box-shadow: 5px 0 5px -3px rgba(101, 169, 242, 0.2);
+}
+
+.btns{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+    margin-left: 50px;
+    margin-bottom: 0px;
+    margin-right: 50px;
+    ;
+}
+
+.addBtn{
+    width: 80px;
+    height: 45px;
+    background-color: #344CB7;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.addBtn:hover{
+    color: #344CB7;
+    background-color: transparent;
+    border: 1px solid #344CB7;
+    transition: 0.2s ease;
+}
+
+.delBtn{
+    width: 80px;
+    height: 45px;
+    background-color: #FA4032;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delBtn:hover{
+    color: #FA4032;
+    background-color: transparent;
+    border: 1px solid #FA4032;
+    transition: 0.2s ease;
+}
+
+.UpdateBtn{
+    width: 80px;
+    height: 45px;
+    background-color: #16C47F;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.UpdateBtn:hover{
+    color: #16C47F;
+    background-color: transparent;
+    border: 1px solid #16C47F;
+    transition: 0.2s ease;
+}

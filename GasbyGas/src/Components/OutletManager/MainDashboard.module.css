@@ -1,3 +1,5 @@
+
+
 .sidePannel{
     width: 300px;
     height: 100vh;
@@ -5,6 +7,7 @@
     box-shadow: 5px 0 5px -3px rgba(0, 0, 0, 0.2);
     font-family: "Poppins", serif;;
     color: #FFF;
+    position: fixed;
 }
 
 .logo{

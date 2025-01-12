@@ -1,0 +1,37 @@
+import { useState } from "react";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import style from "./customerOrders.module.css"
+import MainDashboard from "./MainDashboard"
+
+function customerOrders(){
+    const [selectedOption, setSelectedOption] = useState("Customer Orders"); 
+    return(
+        <>
+            <div className={style.customerOrders}>
+                <div className={style.sidepanel}>
+                    <MainDashboard selectedOption={selectedOption} setSelectedOption={setSelectedOption}/>
+                </div>
+                <div className={style.customerOrderContent}>
+                    <div className={style.sectionName}>
+                        <h2>Customer Orders</h2>
+                    </div>
+                    <hr />
+                    <div className={style.btns}>
+                        <div>
+                            <button className={style.addBtn}>Add</button>
+                            <button className={style.delBtn}>Delete</button>
+                        </div>
+                            <button className={style.UpdateBtn}>Update</button>
+                    </div>
+                    <div className={style.table}>
+                        
+                    </div>
+                </div>
+            </div>
+            
+        </>
+    )
+}
+
+export default customerOrders
