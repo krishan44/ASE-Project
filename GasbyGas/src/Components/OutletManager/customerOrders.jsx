@@ -45,19 +45,7 @@ function customerOrders(){
                             <button className={style.UpdateBtn}>Update</button>
                     </div>
                     <div className={style.table}>
-                        <DataTable value={orders} paginator rows={6}>
-                            <Column field="id" header="ID" sortable></Column>
-                            <Column field="customer_name" header="Customer Name" sortable></Column>
-                            <Column field="order" header="Order" body={orderBodyTemplate} sortable></Column>
-                            <Column field="order_date" header="Order Date" sortable></Column>
-                            <Column field="status" header="Status" sortable></Column>
-                            <Column field="amount" header="Amount" sortable></Column>
-                            <Column header="" body={(rowData) => (
-                                <>
-                                    <img src={edit} alt="edit icon" className={style.editIcon}/>
-                                </>
-                            )}></Column>
-                        </DataTable>
+                        
                     </div>
                 </div>
             </div>
