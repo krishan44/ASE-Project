@@ -7,6 +7,7 @@ import edit from "../../assets/table/edit.svg";
 
 function customerOrders(){
     const [selectedOption, setSelectedOption] = useState("Customer Orders"); 
+    const [selectedOrders, setSelectedOrders] = useState(null);
     const orders = [
         { id: 1, customer_name: "John Doe", order: ["Item 1", "Item 2", "Item 3"], order_date: "2023-01-01", status: "Pending", amount: "$100.00" },
         { id: 2, customer_name: "Jane Smith", order: ["Item 4", "Item 5", "Item 6"], order_date: "2023-01-02", status: "Completed", amount: "$150.00" },
@@ -20,7 +21,7 @@ function customerOrders(){
         return (
             <div className={style.orderItems}>
                 {rowData.order.map((item, index) => (
-                    <div key={index} className={index === 0 ? style.firstOrderItem : style.otherOrderItems}>{item}</div>
+                    <div key={index} className={style.orderItem}>{item}</div>
                 ))}
             </div>
         );
@@ -45,7 +46,7 @@ function customerOrders(){
                             <button className={style.UpdateBtn}>Update</button>
                     </div>
                     <div className={style.table}>
-                        
+                      
                     </div>
                 </div>
             </div>
