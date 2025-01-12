@@ -5,7 +5,6 @@
 
 .customerOrders{
     display: flex;
-    
 }
 
 .customerOrderContent{
@@ -46,7 +45,6 @@
     margin-left: 50px;
     margin-bottom: 0px;
     margin-right: 50px;
-    ;
 }
 
 .addBtn{
@@ -104,4 +102,24 @@
 .editIcon{
     height: 20px;
     width: 20px;
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.dataTable th, .dataTable td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.dataTable th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.dataTable tr:hover {
+    background-color: #f5f5f5;
 }
