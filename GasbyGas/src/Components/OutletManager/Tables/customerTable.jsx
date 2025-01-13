@@ -90,7 +90,7 @@ const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate }) => (
               key={key}
               onClick={() => handleSort(key)}
               className={sortConfig?.key === key ? sortConfig.direction : ''}
-              style={{ textTransform: 'none' }} // Ensure text transform is none
+              style={{ textTransform: 'none' }} 
             >
               {key}
               <span className={style.iconArrow}>{sortConfig?.key === key && (sortConfig.direction === 'asc' ? '↑' : '↓')}</span>
