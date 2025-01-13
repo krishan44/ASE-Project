@@ -71,18 +71,22 @@ table {
 }
 
 .searchIcon{
-     width: 30px ;
-     height: 25px;
-     position: relative;
-     top: 8px;
+     width: 20px;
+     height: 20px;
+     position: absolute;
+     top: 50%;
+     left: 30px;
+     transform: translateY(-50%);
+     pointer-events: none;
 }
 
 .searchField{
      border-radius: 8px;
      border: 1px solid #F5EFE7;
-     height: 10px;
+     height: 40px;
      width: 200px;
-     padding: 20px;
+     padding: 0 10px 0 40px;
+     position: relative;
 }
 
 table, th, td {
@@ -169,11 +173,11 @@ thead th:hover span.icon-arrow{
 }
 
 thead th:hover {
-    color: #6c00bd;
+    color: #ffffff;
 }
 
 thead th.active span.icon-arrow{
-    background-color: #6c00bd;
+    background-color: #ffffff;
     color: #fff;
 }
 
@@ -183,4 +187,19 @@ thead th.asc span.icon-arrow{
 
 thead th.active,tbody td.active {
     color: #6c00bd;
+}
+
+.editIcon{
+    height: 20px;
+    width: 40px;
+    cursor: pointer;
+}
+
+.orderItems {
+    display: flex;
+    flex-direction: column;
+}
+
+.orderItem {
+    margin-bottom: 5px;
 }

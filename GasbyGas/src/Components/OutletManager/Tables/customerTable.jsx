@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import style from './customerTable.module.css';
-import search from '../../../assets/table/search.svg'
+import search from '../../../assets/table/search.svg';
+import edit from '../../../assets/table/edit.svg';
 
 const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', email: 'Seoul', service: '17 Dec, 2022', location: 'Delivered', date: '$128.90', contact: '07723112123' },
-    { id: 2, customer: 'Zinzu Chan Lee', email: 'Kathmandu', service: '27 Aug, 2023', location: 'Cancelled', date: '$5350.50', contact: '07723112123' },
-    { id: 3, customer: 'Zinzu Chan Lee', email: 'Tokyo', service: '14 Mar, 2023', location: 'Shipped', date: '$210.40', contact: '07723112123' },
+    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delivered', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
+    { id: 2, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: 'Tank 2', contact: '07723112123' },
+    { id: 3, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Shipped', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
     // Add more rows as needed
   ]);
   const [sortConfig, setSortConfig] = useState(null);
@@ -17,7 +18,8 @@ const CustomerTable = () => {
   };
 
   const filteredData = tableData.filter(row =>
-    Object.values(row).some(val => val.toString().toLowerCase().includes(searchValue))
+    row.id.toString().toLowerCase().includes(searchValue) ||
+    row.customer.toLowerCase().includes(searchValue)
   );
 
   const handleSort = (key) => {
@@ -30,17 +32,34 @@ const CustomerTable = () => {
 
   const sortedData = [...filteredData].sort((a, b) => {
     if (sortConfig) {
-      if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-      if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+      if (sortConfig.key === 'Order') {
+        const aOrderTotal = a.order.reduce((sum, item) => sum + parseInt(item.split(':')[1].trim()), 0);
+        const bOrderTotal = b.order.reduce((sum, item) => sum + parseInt(item.split(':')[1].trim()), 0);
+        if (aOrderTotal < bOrderTotal) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aOrderTotal > bOrderTotal) return sortConfig.direction === 'asc' ? 1 : -1;
+      } else {
+        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+      }
     }
     return 0;
   });
+
+  const orderBodyTemplate = (rowData) => {
+    return (
+      <div className={style.orderItems}>
+        {rowData.order.map((item, index) => (
+          <div key={index} className={style.orderItem}>{item}</div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className={style.App}>
       <main className={style.table} id="customers_table">
         <TableHeader searchValue={searchValue} handleSearch={handleSearch} />
-        <TableBody data={sortedData} handleSort={handleSort} sortConfig={sortConfig} />
+        <TableBody data={sortedData} handleSort={handleSort} sortConfig={sortConfig} orderBodyTemplate={orderBodyTemplate} />
       </main>
     </div>
   );
@@ -49,7 +68,6 @@ const CustomerTable = () => {
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
-    <img src={search} alt="search icon" className={style.searchIcon}/>
       <input
         type="search"
         placeholder="Search Data..."
@@ -57,22 +75,24 @@ const TableHeader = ({ searchValue, handleSearch }) => (
         className={style.searchField}
         onChange={handleSearch}
       />
+      <img src={search} alt="search icon" className={style.searchIcon}/>
     </div>
   </section>
 );
 
-const TableBody = ({ data, handleSort, sortConfig }) => (
+const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate }) => (
   <section className={style.table__body}>
     <table>
       <thead>
         <tr>
-          {['Token', 'Customer', 'Order', 'Order Date', 'Status', 'Total', ' '].map(key => (
+          {['Token', 'Customer', 'Order', 'Order Date', 'Status', 'Total', 'Tank', ' '].map(key => (
             <th
               key={key}
               onClick={() => handleSort(key)}
               className={sortConfig?.key === key ? sortConfig.direction : ''}
+              style={{ textTransform: 'none' }} // Ensure text transform is none
             >
-              {key.toUpperCase()}
+              {key}
               <span className={style.iconArrow}>{sortConfig?.key === key && (sortConfig.direction === 'asc' ? '↑' : '↓')}</span>
             </th>
           ))}
@@ -83,13 +103,16 @@ const TableBody = ({ data, handleSort, sortConfig }) => (
           <tr key={row.id} style={{ backgroundColor: index % 2 === 0 ? 'transparent' : '#0000000b' }}>
             <td>{row.id}</td>
             <td>{row.customer}</td>
-            <td>{row.email}</td>
-            <td>{row.service}</td>
+            <td>{orderBodyTemplate(row)}</td>
+            <td>{row.Date}</td>
             <td>
-              <p className={`${style.status} ${style[row.location.toLowerCase()]}`}>{row.location}</p>
+              <p className={`${style.status} ${style[row.Status.toLowerCase()]}`}>{row.Status}</p>
             </td>
-            <td>{row.date}</td>
-            <td>{row.contact}</td>
+            <td>{row.Total}</td>
+            <td>{row.Tank}</td>
+            <td>
+              <img src={edit} alt="edit icon" className={style.editIcon}/>
+            </td>
           </tr>
         ))}
       </tbody>
