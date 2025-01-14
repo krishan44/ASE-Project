@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
@@ -7,20 +7,33 @@ const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
     { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delivered', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
-    { id: 2, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: 'Tank 2', contact: '07723112123' },
-    { id: 3, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
+    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: 'Tank 2', contact: '07723112123' },
+    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
     // Add more rows as needed
   ]);
   const [sortConfig, setSortConfig] = useState(null);
+  const [editingStatusId, setEditingStatusId] = useState(null);
 
   const handleSearch = (e) => {
-    setSearchValue(e.target.value.toLowerCase());
+    setSearchValue(e.target.value);
   };
 
-  const filteredData = tableData.filter(row =>
-    row.id.toString().toLowerCase().includes(searchValue) ||
-    row.customer.toLowerCase().includes(searchValue)
-  );
+  const handleStatusChange = (id, newStatus) => {
+    setTableData(prevData =>
+      prevData.map(row =>
+        row.id === id ? { ...row, Status: newStatus } : row
+      )
+    );
+    setEditingStatusId(null);
+  };
+
+  const filteredData = tableData.filter(row => {
+    const normalizedSearch = searchValue.toLowerCase().trim();
+    return (
+      row.id.toString().toLowerCase().includes(normalizedSearch) ||
+      row.customer.toLowerCase().includes(normalizedSearch)
+    );
+  });
 
   const handleSort = (key) => {
     let direction = 'asc';
@@ -70,7 +83,7 @@ const CustomerTable = () => {
     <div className={style.App}>
       <main className={style.table} id="customers_table">
         <TableHeader searchValue={searchValue} handleSearch={handleSearch} />
-        <TableBody data={sortedData} handleSort={handleSort} sortConfig={sortConfig} orderBodyTemplate={orderBodyTemplate} getStatusStyle={getStatusStyle} />
+        <TableBody data={sortedData} handleSort={handleSort} sortConfig={sortConfig} orderBodyTemplate={orderBodyTemplate} getStatusStyle={getStatusStyle} handleStatusChange={handleStatusChange} editingStatusId={editingStatusId} setEditingStatusId={setEditingStatusId} />
       </main>
     </div>
   );
@@ -81,7 +94,7 @@ const TableHeader = ({ searchValue, handleSearch }) => (
     <div className={style.inputGroup}>
       <input
         type="search"
-        placeholder="Search Data..."
+        placeholder="Search By ID..."
         value={searchValue}
         className={style.searchField}
         onChange={handleSearch}
@@ -91,7 +104,7 @@ const TableHeader = ({ searchValue, handleSearch }) => (
   </section>
 );
 
-const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate, getStatusStyle }) => (
+const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate, getStatusStyle, handleStatusChange, editingStatusId, setEditingStatusId }) => (
   <section className={style.table__body}>
     <table>
       <thead>
@@ -117,12 +130,27 @@ const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate, getStatusS
             <td>{orderBodyTemplate(row)}</td>
             <td>{row.Date}</td>
             <td>
-              <p className={`${style.status} ${style[row.Status.toLowerCase()]}`} style={getStatusStyle(row.Status)}>{row.Status}</p>
+              {editingStatusId === row.id ? (
+                <select
+                  value={row.Status}
+                  onChange={(e) => handleStatusChange(row.id, e.target.value)}
+                  onBlur={() => setEditingStatusId(null)}
+                  className={`${style.status} ${style[row.Status.toLowerCase()]}`}
+                  style={getStatusStyle(row.Status)}
+                >
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Arrived">Arrived</option>
+                 
+                </select>
+              ) : (
+                <p className={`${style.status} ${style[row.Status.toLowerCase()]}`} style={getStatusStyle(row.Status)}>{row.Status}</p>
+              )}
             </td>
             <td>{row.Total}</td>
             <td>{row.Tank}</td>
             <td>
-              <img src={edit} alt="edit icon" className={style.editIcon}/>
+              <img src={edit} alt="edit icon" className={style.editIcon} onClick={() => setEditingStatusId(row.id)} />
             </td>
           </tr>
         ))}
