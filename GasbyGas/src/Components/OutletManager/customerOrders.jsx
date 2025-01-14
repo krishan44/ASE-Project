@@ -4,6 +4,7 @@ import { Column } from 'primereact/column';
 import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
 import edit from "../../assets/table/edit.svg";
+import CustomerTable from "./Tables/customerTable"
 
 function customerOrders(){
     const [selectedOption, setSelectedOption] = useState("Customer Orders"); 
@@ -29,7 +30,7 @@ function customerOrders(){
                             <button className={style.UpdateBtn}>Update</button>
                     </div>
                     <div className={style.table}>
-                      
+                      <CustomerTable/>
                     </div>
                 </div>
             </div>

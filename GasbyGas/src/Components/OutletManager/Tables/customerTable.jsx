@@ -6,7 +6,7 @@ import edit from '../../../assets/table/edit.svg';
 const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delivered', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
+    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Picked', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
     { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: 'Tank 2', contact: '07723112123' },
     { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
     // Add more rows as needed
@@ -130,22 +130,29 @@ const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate, getStatusS
             <td>{orderBodyTemplate(row)}</td>
             <td>{row.Date}</td>
             <td>
-              {editingStatusId === row.id ? (
-                <select
-                  value={row.Status}
-                  onChange={(e) => handleStatusChange(row.id, e.target.value)}
-                  onBlur={() => setEditingStatusId(null)}
+              <div className={style.statusContainer}>
+                <p
                   className={`${style.status} ${style[row.Status.toLowerCase()]}`}
                   style={getStatusStyle(row.Status)}
+                  onMouseEnter={() => editingStatusId === row.id && setEditingStatusId(row.id)}
                 >
-                  <option value="Delivered">Delivered</option>
-                  <option value="Cancelled">Cancelled</option>
-                  <option value="Arrived">Arrived</option>
-                 
-                </select>
-              ) : (
-                <p className={`${style.status} ${style[row.Status.toLowerCase()]}`} style={getStatusStyle(row.Status)}>{row.Status}</p>
-              )}
+                  {row.Status}
+                </p>
+                {editingStatusId === row.id && (
+                  <div className={style.statusOptions}>
+                    {['Picked', 'Cancelled', 'Arrived'].filter(status => status !== row.Status).map(status => (
+                      <p
+                        key={status}
+                        className={`${style.status} ${style[status.toLowerCase()]}`}
+                        style={getStatusStyle(status)}
+                        onClick={() => handleStatusChange(row.id, status)}
+                      >
+                        {status}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
             </td>
             <td>{row.Total}</td>
             <td>{row.Tank}</td>
