@@ -6,9 +6,9 @@ import edit from '../../../assets/table/edit.svg';
 const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delivered', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
+    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delivered', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
     { id: 2, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: 'Tank 2', contact: '07723112123' },
-    { id: 3, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Shipped', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
+    { id: 3, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
     // Add more rows as needed
   ]);
   const [sortConfig, setSortConfig] = useState(null);
@@ -55,11 +55,22 @@ const CustomerTable = () => {
     );
   };
 
+  const getStatusStyle = (status) => {
+    switch (status.toLowerCase()) {
+      case 'arrived':
+        return { backgroundColor: '#4379F2' };
+      case 'cancelled':
+        return { backgroundColor: '#F95454' };
+      default:
+        return {};
+    }
+  };
+
   return (
     <div className={style.App}>
       <main className={style.table} id="customers_table">
         <TableHeader searchValue={searchValue} handleSearch={handleSearch} />
-        <TableBody data={sortedData} handleSort={handleSort} sortConfig={sortConfig} orderBodyTemplate={orderBodyTemplate} />
+        <TableBody data={sortedData} handleSort={handleSort} sortConfig={sortConfig} orderBodyTemplate={orderBodyTemplate} getStatusStyle={getStatusStyle} />
       </main>
     </div>
   );
@@ -80,7 +91,7 @@ const TableHeader = ({ searchValue, handleSearch }) => (
   </section>
 );
 
-const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate }) => (
+const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate, getStatusStyle }) => (
   <section className={style.table__body}>
     <table>
       <thead>
@@ -106,7 +117,7 @@ const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate }) => (
             <td>{orderBodyTemplate(row)}</td>
             <td>{row.Date}</td>
             <td>
-              <p className={`${style.status} ${style[row.Status.toLowerCase()]}`}>{row.Status}</p>
+              <p className={`${style.status} ${style[row.Status.toLowerCase()]}`} style={getStatusStyle(row.Status)}>{row.Status}</p>
             </td>
             <td>{row.Total}</td>
             <td>{row.Tank}</td>
