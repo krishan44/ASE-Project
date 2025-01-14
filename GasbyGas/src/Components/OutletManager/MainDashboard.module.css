@@ -63,13 +63,15 @@
 }
 
 .option{
-    padding: 10px 12px;
+    margin-left: 10px;
+    padding-left: 10px;
     position: relative;
     /* left: 100px; */
     text-align: left;
-    width: 100%;
+    width: 81.2%;
     cursor: pointer;
-    height: 32px;
+    height: 40px;
+    padding-top: 5px;
     transition: 0.2s ease;
 }
 
@@ -91,7 +93,6 @@
     background-color: #edf0f2;
     color: #000;
     border-radius: 10px 0px 0px 10px;
-    font-size: 18px;
 }
 
 .Logout{
