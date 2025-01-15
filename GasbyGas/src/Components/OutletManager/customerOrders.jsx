@@ -25,12 +25,12 @@ function customerOrders(){
                     <div className={style.btns}>
                         <div>
                             <button className={style.addBtn}>Add</button>
-                            <button className={style.delBtn}>Delete</button>
+                            
                         </div>
-                            <button className={style.UpdateBtn}>Update</button>
+                            <button className={style.delBtn}>Delete</button>
                     </div>
                     <div className={style.table}>
-                      <CustomerTable/>
+                    <CustomerTable/>
                     </div>
                 </div>
             </div>

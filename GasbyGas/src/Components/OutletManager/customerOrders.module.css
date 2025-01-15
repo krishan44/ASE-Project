@@ -1,19 +1,24 @@
-.sidepanel{
+.sidepanel {
     height: 100vh;
     width: 300px;
 }
 
-.customerOrders{
+.customerOrders {
     display: flex;
+    background-color: #edf0f2;
+    min-height: 100vh;
+    width: 100%;
 }
 
-.customerOrderContent{
+.customerOrderContent {
     background-color: #edf0f2;
     width: 100%;
     margin-left: 50px;
+    min-height: 100vh;
+    padding-bottom: 30px;
 }
 
-.sectionName{
+.sectionName {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -27,7 +32,7 @@
     font-family: "Manrope", serif;
 }
 
-.table{
+.table {
     width: 95%;
     height: 650px;
     background-color: #FFF;
@@ -36,9 +41,10 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 5px 0 5px -3px rgba(101, 169, 242, 0.2);
+    overflow: hidden;
 }
 
-.btns{
+.btns {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
@@ -48,7 +54,7 @@
     margin-right: 50px;
 }
 
-.addBtn{
+.addBtn {
     width: 80px;
     height: 45px;
     background-color: #344CB7;
@@ -59,14 +65,14 @@
     margin-right: 5px;
 }
 
-.addBtn:hover{
+.addBtn:hover {
     color: #344CB7;
     background-color: transparent;
     border: 1px solid #344CB7;
     transition: 0.2s ease;
 }
 
-.delBtn{
+.delBtn {
     width: 80px;
     height: 45px;
     background-color: #FA4032;
@@ -76,14 +82,14 @@
     cursor: pointer;
 }
 
-.delBtn:hover{
+.delBtn:hover {
     color: #FA4032;
     background-color: transparent;
     border: 1px solid #FA4032;
     transition: 0.2s ease;
 }
 
-.UpdateBtn{
+.UpdateBtn {
     width: 80px;
     height: 45px;
     background-color: #16C47F;
@@ -93,14 +99,14 @@
     cursor: pointer;
 }
 
-.UpdateBtn:hover{
+.UpdateBtn:hover {
     color: #16C47F;
     background-color: transparent;
     border: 1px solid #16C47F;
     transition: 0.2s ease;
 }
 
-.editIcon{
+.editIcon {
     height: 20px;
     width: 20px;
 }

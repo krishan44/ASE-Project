@@ -9,6 +9,8 @@ const CustomerTable = () => {
     { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Picked', Total: '$128.90', Tank: 'Tank 1', contact: '07723112123' },
     { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: 'Tank 2', contact: '07723112123' },
     { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
+    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
+    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: 'Tank 3', contact: '07723112123' },
     // Add more rows as needed
   ]);
   const [sortConfig, setSortConfig] = useState(null);

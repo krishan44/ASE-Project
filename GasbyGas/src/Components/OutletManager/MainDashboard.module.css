@@ -65,9 +65,7 @@
     transition: background-color 0.3s;
 }
 
-.optionContainer:hover {
-    background-color: #34495e;
-}
+
 
 .option{
     padding-left: 10px;
