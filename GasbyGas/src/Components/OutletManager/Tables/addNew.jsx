@@ -249,7 +249,7 @@ function addNew(){
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginTop: '10px',
-                    borderRadius:'5px',
+                    borderRadius:'3px',
                     backgroundColor:'#D84040',
                     '&:hover': {
                     color: '#D84040',
