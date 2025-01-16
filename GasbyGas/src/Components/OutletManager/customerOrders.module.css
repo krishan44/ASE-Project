@@ -41,7 +41,8 @@
     padding: 10px;
     border-radius: 10px;
     box-shadow: 5px 0 5px -3px rgba(101, 169, 242, 0.2);
-    overflow: hidden;
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; 
 }
 
 .btns {

@@ -44,21 +44,28 @@ const CustomerTable = () => {
     }
     setSortConfig({ key, direction });
   };
-
+  
   const sortedData = [...filteredData].sort((a, b) => {
     if (sortConfig) {
-      if (sortConfig.key === 'Order') {
-        const aOrderTotal = a.order.reduce((sum, item) => sum + parseInt(item.split(':')[1].trim()), 0);
-        const bOrderTotal = b.order.reduce((sum, item) => sum + parseInt(item.split(':')[1].trim()), 0);
-        if (aOrderTotal < bOrderTotal) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (aOrderTotal > bOrderTotal) return sortConfig.direction === 'asc' ? 1 : -1;
-      } else {
-        if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
-        if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
+      const { key, direction } = sortConfig;
+      let aValue = a[key];
+      let bValue = b[key];
+  
+      // Handle specific cases for numbers and dates
+      if (key === 'id') { // Numeric sorting for Token
+        aValue = parseInt(aValue);
+        bValue = parseInt(bValue);
+      } else if (key === 'Date') { // Date sorting for Order Date
+        aValue = new Date(aValue);
+        bValue = new Date(bValue);
       }
+  
+      if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return direction === 'asc' ? 1 : -1;
     }
     return 0;
   });
+  
 
   const orderBodyTemplate = (rowData) => {
     return (

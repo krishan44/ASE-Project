@@ -25,7 +25,7 @@ function customerOrders(){
                     <div className={style.btns}>
                         <div>
                             <button className={style.addBtn}>Add</button>
-                            
+                            <button className={style.UpdateBtn}>Save</button>
                         </div>
                             <button className={style.delBtn}>Delete</button>
                     </div>
