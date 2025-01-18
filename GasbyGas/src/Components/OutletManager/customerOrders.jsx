@@ -3,10 +3,15 @@ import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
 import CustomerTable from "./Tables/customerTable";
 import AddNew from "./Tables/addNew";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
+import AlertTitle from '@mui/material/AlertTitle';
 
 function CustomerOrders() {
     const [selectedOption, setSelectedOption] = useState("Customer Orders");
     const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
+    const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
+    const [isDelAlertVisible,setisDelAlertVisible]= useState(false);
 
     const handleAddClick = () => {
         setIsAddNewVisible(true); // Show the AddNew popup
@@ -15,6 +20,16 @@ function CustomerOrders() {
     const handleCloseAddNew = () => {
         setIsAddNewVisible(false); // Close the AddNew popup
     };
+
+    const handleSaveClick = () => {
+        setIsAlertVisible(true); // Show the alert
+        setTimeout(() => setIsAlertVisible(false), 3000); // Hide the alert after 3 seconds
+    };
+
+    const handleDeleteClick = () =>{
+        setisDelAlertVisible(true);
+        setTimeout(() => setisDelAlertVisible(false),3000);
+    }
 
     return (
         <>
@@ -35,13 +50,33 @@ function CustomerOrders() {
                             <button className={style.addBtn} onClick={handleAddClick}>
                                 Add
                             </button>
-                            <button className={style.UpdateBtn}>Save</button>
+                            <button className={style.UpdateBtn} onClick={handleSaveClick}>
+                                Save
+                            </button>
                         </div>
-                        <button className={style.delBtn}>Delete</button>
+                        <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button>
                     </div>
                     <div className={style.table}>
                         <CustomerTable />
                     </div>
+                    {/* Alert for Save button */}
+                    {isAlertVisible && (
+                        <div className={style.alertContainer}>
+                            <Alert severity="success">
+                            <AlertTitle>Success</AlertTitle>
+                            This is a success Alert with an encouraging title.
+                            </Alert>
+                        </div>
+                    )}
+
+                    {isDelAlertVisible && (
+                        <div className={style.alertContainerDel}>
+                            <Alert severity="error" sx={{width:'400px'}}>
+                            <AlertTitle>Deleted</AlertTitle>
+                            This is an Delete Message
+                            </Alert>
+                        </div>
+                    )}
                 </div>
             </div>
 

@@ -148,3 +148,14 @@
     color: #b02020;
 }
 
+.alertContainer{
+    position: absolute;
+    top: 70px;
+    left: 650px;
+}
+
+.alertContainerDel{
+    position: absolute;
+    top: 160px;
+    left: 700px;
+}
