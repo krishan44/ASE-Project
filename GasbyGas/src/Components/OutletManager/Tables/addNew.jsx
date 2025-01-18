@@ -37,8 +37,7 @@ function AddNew() {
       sx={{
         width: '400px',
         height: '600px',
-        boxShadow:
-          'rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px',
+       
         padding: '14px 14px',
         borderRadius: '10px',
       }}
@@ -71,7 +70,7 @@ function AddNew() {
             sx={{
               '& .MuiInputBase-root': {
                 height: '40px',
-                width: '280px',
+                width: '380px',
                 fontFamily: 'Poppins',
                 fontSize: '12px',
                 marginTop: '5px',
@@ -107,7 +106,7 @@ function AddNew() {
                   sx={{
                     '& .MuiInputBase-root': {
                       height: '40px',
-                      width: '60px',
+                      width: '70px',
                       fontFamily: 'Poppins',
                       fontSize: '12px',
                       marginTop: '5px',
@@ -137,8 +136,8 @@ function AddNew() {
             fullWidth
             sx={{
               marginTop: '5px',
-              height: '40px',
-              width: '280px',
+              height: '20px',
+              width: '380px',
               '& .MuiInputBase-root': {
                 borderRadius: '8px',
               },
@@ -158,7 +157,7 @@ function AddNew() {
         </Box>
 
         <Box>
-          <Typography sx={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Poppins', marginTop: '25px' }}>
+          <Typography sx={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Poppins', marginTop: '45px' }}>
             Tank Status
           </Typography>
           <Box sx={{ display: 'flex', gap: '5px' }}>
@@ -184,7 +183,7 @@ function AddNew() {
                   sx={{
                     '& .MuiInputBase-root': {
                       height: '40px',
-                      width: '60px',
+                      width: '70px',
                       fontFamily: 'Poppins',
                       fontSize: '12px',
                       marginTop: '5px',
@@ -212,7 +211,7 @@ function AddNew() {
             sx={{
               '& .MuiInputBase-root': {
                 height: '40px',
-                width: '280px',
+                width: '380px',
                 fontFamily: 'Poppins',
                 fontSize: '12px',
                 marginTop: '5px',
@@ -231,7 +230,7 @@ function AddNew() {
             sx={{
               '& .MuiInputBase-root': {
                 height: '40px',
-                width: '280px',
+                width: '380px',
                 fontFamily: 'Poppins',
                 fontSize: '12px',
                 marginTop: '5px',
@@ -241,29 +240,8 @@ function AddNew() {
         </Box>
       </Stack>
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
-        <Typography
-          sx={{
-            width: '100px',
-            height: '40px',
-            color: '#FFF',
-            cursor: 'pointer',
-            textAlign: 'center',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: '10px',
-            borderRadius: '3px',
-            backgroundColor: '#D84040',
-            '&:hover': {
-              color: '#D84040',
-              backgroundColor: 'transparent',
-              border: '1px solid #D84040',
-            },
-          }}
-        >
-          Cancel
-        </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        
 
         <Typography
           sx={{

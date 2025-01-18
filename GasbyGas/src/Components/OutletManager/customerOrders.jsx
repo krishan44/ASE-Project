@@ -1,21 +1,29 @@
-import { useState } from "react";
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
+import React, { useState } from "react";
 import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
-import edit from "../../assets/table/edit.svg";
-import CustomerTable from "./Tables/customerTable"
+import CustomerTable from "./Tables/customerTable";
+import AddNew from "./Tables/addNew";
 
-function customerOrders(){
-    const [selectedOption, setSelectedOption] = useState("Customer Orders"); 
-    const [selectedOrders, setSelectedOrders] = useState(null);
-    
+function CustomerOrders() {
+    const [selectedOption, setSelectedOption] = useState("Customer Orders");
+    const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
 
-    return(
+    const handleAddClick = () => {
+        setIsAddNewVisible(true); // Show the AddNew popup
+    };
+
+    const handleCloseAddNew = () => {
+        setIsAddNewVisible(false); // Close the AddNew popup
+    };
+
+    return (
         <>
             <div className={style.customerOrders}>
                 <div className={style.sidepanel}>
-                    <MainDashboard selectedOption={selectedOption} setSelectedOption={setSelectedOption}/>
+                    <MainDashboard
+                        selectedOption={selectedOption}
+                        setSelectedOption={setSelectedOption}
+                    />
                 </div>
                 <div className={style.customerOrderContent}>
                     <div className={style.sectionName}>
@@ -24,19 +32,35 @@ function customerOrders(){
                     <hr />
                     <div className={style.btns}>
                         <div>
-                            <button className={style.addBtn}>Add</button>
+                            <button className={style.addBtn} onClick={handleAddClick}>
+                                Add
+                            </button>
                             <button className={style.UpdateBtn}>Save</button>
                         </div>
-                            <button className={style.delBtn}>Delete</button>
+                        <button className={style.delBtn}>Delete</button>
                     </div>
                     <div className={style.table}>
-                    <CustomerTable/>
+                        <CustomerTable />
                     </div>
                 </div>
             </div>
-            
+
+            {/* Popup for AddNew */}
+            {isAddNewVisible && (
+                <div className={style.popupOverlay}>
+                    <div className={style.popupContent}>
+                        <AddNew />
+                        <button
+                            className={style.closeBtn}
+                            onClick={handleCloseAddNew}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
         </>
-    )
+    );
 }
 
-export default customerOrders;
+export default CustomerOrders;
