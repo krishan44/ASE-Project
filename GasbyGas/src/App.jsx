@@ -3,7 +3,7 @@ import './App.css';
 import Overview from "./Components/OutletManager/Overview";
 import CustomerOrders from "./Components/OutletManager/customerOrders";
 import CustomerTable from "./Components/OutletManager/Tables/customerTable";
-import Addnew from "./Components/OutletManager/Tables/addNew";
+import BusinessOrders from "./Components/OutletManager/BusinessOrder";
 
 function App() {
   return (
@@ -11,8 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Overview />} />
         <Route path="/orders" element={<CustomerOrders />} />
-        <Route path="/customers" element={<CustomerTable />} />
-        <Route path="/AddNew" element={<Addnew />} />
+        <Route path="/BusinessOrders" element={<BusinessOrders />} />
       </Routes>
     </Router>
   );

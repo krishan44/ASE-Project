@@ -26,10 +26,10 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
             <img src={order} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Customer Orders" ? style.selected : ""}`}>Customer Orders</span>
           </Link>
-          <div className={style.optionContainer} onClick={() => setSelectedOption("Business Orders")}>
+          <Link to="/BusinessOrders" className={style.optionContainer} onClick={() => setSelectedOption("Business Orders")}>
             <img src={orderstock} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Business Orders" ? style.selected : ""}`}>Business Orders</span>
-          </div>
+          </Link>          
           <div className={style.optionContainer} onClick={() => setSelectedOption("Stock Orders")}>
             <img src={stock} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Stock Orders" ? style.selected : ""}`}>Stock Orders</span>
