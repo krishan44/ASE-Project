@@ -164,7 +164,7 @@ const TableBody = ({ data, handleSort, sortConfig, orderBodyTemplate, getStatusS
               </div>
             </td>
             <td>{row.Total}</td>
-            <td>{row.Tank}</td>
+            <td>{orderBodyTemplate(row)}</td>
             <td>
               <img src={edit} alt="edit icon" className={style.editIcon} onClick={() => setEditingStatusId(row.id)} />
             </td>

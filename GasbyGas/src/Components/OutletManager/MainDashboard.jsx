@@ -30,10 +30,10 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
             <img src={orderstock} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Business Orders" ? style.selected : ""}`}>Business Orders</span>
           </Link>          
-          <div className={style.optionContainer} onClick={() => setSelectedOption("Stock Orders")}>
+          <Link to="/StockOrders" className={style.optionContainer} onClick={() => setSelectedOption("Stock Orders")}>
             <img src={stock} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Stock Orders" ? style.selected : ""}`}>Stock Orders</span>
-          </div>
+          </Link>          
           <div className={style.optionContainer} onClick={() => setSelectedOption("Waitlist Manage")}>
             <img src={waitlist} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Waitlist Manage" ? style.selected : ""}`}>Waitlist Manage</span>
@@ -46,11 +46,12 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
             <img src={report} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Report Generation" ? style.selected : ""}`}>Report Generation</span>
           </div>
-        </div>
-        <div className={style.Logout}>
+          <div className={style.Logout}>
           <span>Logout</span>
           <img src={logOut} className={style.logOutI} alt="LogOut icon" />
         </div>
+        </div>
+        
       </div>
     </div>
   );
