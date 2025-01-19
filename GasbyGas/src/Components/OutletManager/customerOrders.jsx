@@ -6,12 +6,14 @@ import AddNew from "./Tables/addNew";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
+import Delete from "./Notifications/delete";
 
 function CustomerOrders() {
     const [selectedOption, setSelectedOption] = useState("Customer Orders");
     const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
     const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
-    const [isDelAlertVisible,setisDelAlertVisible]= useState(false);
+    const [isDelAlertVisible,setisDelAlertVisible]= useState(false); //Manage Delete Alert
+
 
     const handleAddClick = () => {
         setIsAddNewVisible(true); // Show the AddNew popup
@@ -28,7 +30,10 @@ function CustomerOrders() {
 
     const handleDeleteClick = () =>{
         setisDelAlertVisible(true);
-        setTimeout(() => setisDelAlertVisible(false),3000);
+    }
+
+    const handleDeleteClose=()=>{
+        setisDelAlertVisible(false);
     }
 
     return (
@@ -70,12 +75,18 @@ function CustomerOrders() {
                     )}
 
                     {isDelAlertVisible && (
-                        <div className={style.alertContainerDel}>
-                            <Alert severity="error" sx={{width:'400px'}}>
-                            <AlertTitle>Deleted</AlertTitle>
-                            This is an Delete Message
-                            </Alert>
-                        </div>
+                         <div className={style.DelpopupOverlay}>
+                         <div className={style.DelpopupContent}>
+                             <Delete />
+                             <button
+                                 className={style.closeBtn}
+                                 onClick={handleDeleteClose}
+                             >
+                                 Close
+                             </button>
+                         </div>
+                     </div>
+                        
                     )}
                 </div>
             </div>
@@ -99,3 +110,10 @@ function CustomerOrders() {
 }
 
 export default CustomerOrders;
+
+{/* // <div className={style.alertContainerDel}>
+                        //     <Alert severity="error" sx={{width:'400px'}}>
+                        //     <AlertTitle>Deleted</AlertTitle>
+                        //     This is an Delete Message
+                        //     </Alert>
+                        // </div> */}
