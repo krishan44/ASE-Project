@@ -6,6 +6,7 @@ import CustomerTable from "./Components/OutletManager/Tables/customerTable";
 import BusinessOrders from "./Components/OutletManager/BusinessOrder";
 import StockOrders from "./Components/OutletManager/StockOrder";
 import Delete from "./Components/OutletManager/Notifications/delete";
+import Waitlist from './Components/OutletManager/Waitlist';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/BusinessOrders" element={<BusinessOrders />} />
         <Route path="/StockOrders" element={<StockOrders />} />
         <Route path="/Delete" element ={<Delete/>}/>
+        <Route path="/Waitlist Manage" element={<Waitlist/>}/> 
       </Routes>
     </Router>
   );

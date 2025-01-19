@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import style from './customerTable.module.css';
+import style from './WaitTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
-const Business = () => {
+const WalistTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Picked', Total: '$128.90', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
+    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Waiting', Total: '$128.90'},
+    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50' },
+    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40'},
+    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40' },
+    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Cancelled', Total: '$210.40' },
   ]);
   const [sortConfig, setSortConfig] = useState(null);
   const [editingStatusId, setEditingStatusId] = useState(null);
@@ -80,20 +80,7 @@ const Business = () => {
     }
     return 0;
   });
-
-  // Get status style based on status value
-  const getStatusStyle = (status) => {
-    switch (status.toLowerCase()) {
-      case 'picked':
-        return { backgroundColor: '#4CAF50' }; // Green for Picked
-      case 'cancelled':
-        return { backgroundColor: '#F44336' }; // Red for Cancelled
-      case 'arrived':
-        return { backgroundColor: '#4379F2' }; // Blue for Arrived
-      default:
-        return {};
-    }
-  };
+ 
 
   return (
     <div className={style.App}>
@@ -135,18 +122,7 @@ const Business = () => {
     </div>
   );
 };
-const getStatusStyle = (status) => {
-  switch (status.toLowerCase()) {
-    case 'picked':
-      return { backgroundColor: '#4CAF50' }; // Green for Picked
-    case 'cancelled':
-      return { backgroundColor: '#F44336' }; // Red for Cancelled
-    case 'arrived':
-      return { backgroundColor: '#4379F2' }; // Blue for Arrived
-    default:
-      return {};
-  }
-};
+
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -161,7 +137,19 @@ const TableHeader = ({ searchValue, handleSearch }) => (
     </div>
   </section>
 );
-
+const getStatusClass = (status) => {
+  switch (status.toLowerCase()) {
+ // CSS class for Delayed
+    case 'cancelled':
+      return style.cancelled; // CSS class for Cancelled
+    case 'confirmed':
+      return style.confirmed; // CSS class for Confirmed
+    case 'Waiting':
+        return style.delivered; // CSS class for Confirmed
+    default:
+      return '';
+  }
+};
 const TableBody = ({
   data,
   handleSort,
@@ -175,7 +163,7 @@ const TableBody = ({
     <table>
       <thead>
         <tr>
-          {['Token', 'Business', 'Order', 'Order Date', 'Status', 'Total', 'Tank', ' '].map((key) => (
+          {['Customer ID', 'Customer', 'Order', 'Order Date', 'Status', 'Total'].map((key) => (
             <th
               key={key}
               onClick={() => handleSort(key)}
@@ -207,21 +195,19 @@ const TableBody = ({
             <td>
               <div className={style.statusContainer}>
                 <p
-                  className={`${style.status} ${style[row.Status.toLowerCase()]}`}
-                  style={getStatusStyle(row.Status)}
+                  className={`${style.status} ${getStatusClass(row.Status)}`}
                   onClick={() => setEditingStatusId(row.id)}
                 >
                   {row.Status}
                 </p>
                 {editingStatusId === row.id && (
                   <div className={style.statusOptions}>
-                    {['Picked', 'Cancelled', 'Arrived']
+                    {[ 'Cancelled', 'Waiting', 'Confirmed']
                       .filter((status) => status.toLowerCase() !== row.Status.toLowerCase())
                       .map((status) => (
                         <p
                           key={status}
-                          className={`${style.status} ${style[status.toLowerCase()]}`}
-                          style={getStatusStyle(status)}
+                          className={`${style.status} ${getStatusClass(status)}`}
                           onClick={() => handleStatusChange(row.id, status)}
                         >
                           {status}
@@ -232,19 +218,7 @@ const TableBody = ({
               </div>
             </td>
             <td>{row.Total}</td>
-            <td>
-              <button className={style.viewBtn} onClick={() => handleView('Tank', Array.isArray(row.Tank) ? row.Tank : [row.Tank])}>
-                View
-              </button>
-            </td>
-            <td>
-              <img
-                src={edit}
-                alt="edit icon"
-                className={style.editIcon}
-                onClick={() => setEditingStatusId(row.id)}
-              />
-            </td>
+            
           </tr>
         ))}
       </tbody>
@@ -252,4 +226,4 @@ const TableBody = ({
   </section>
 );
 
-export default Business;
+export default WalistTable;
