@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import style from "./customerOrders.module.css";
+import style from "./stockOrders.module.css";
 import MainDashboard from "./MainDashboard";
 import edit from "../../assets/table/edit.svg";
 import StockTable from "./Tables/stockTable"
@@ -97,7 +97,7 @@ function StockOrders(){
             {/* Popup for AddNew */}
             {isAddNewVisible && (
                 <div className={style.popupOverlay}>
-                    <div className={style.popupContent}>
+                    <div className={style.popupContent} style={{ height: "400px"}}>
                         <AddNewStock />
                         <button
                             className={style.closeBtn}

@@ -136,50 +136,7 @@ function AddNewStock() {
           />
         </Box>
 
-        <Box>
-          <Typography sx={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Poppins', marginTop: '45px' }}>
-            Tank Status
-          </Typography>
-          <Box sx={{ display: 'flex', gap: '5px' }}>
-            {['small', 'medium', 'large'].map((key, index) => (
-              <Box
-                key={index}
-                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-              >
-                <RemoveIcon
-                  onClick={() => handleDecrement(setTankQuantities, key)}
-                  sx={{ cursor: 'pointer' }}
-                />
-                <TextField
-                  variant="outlined"
-                  placeholder={
-                    key === 'small'
-                      ? '2.5Kg'
-                      : key === 'medium'
-                      ? '5Kg'
-                      : '12.5Kg'
-                  }
-                  value={tankQuantities[key]}
-                  sx={{
-                    '& .MuiInputBase-root': {
-                      height: '40px',
-                      width: '70px',
-                      fontFamily: 'Poppins',
-                      fontSize: '12px',
-                      marginTop: '5px',
-                      textAlign: 'center',
-                    },
-                  }}
-                  inputProps={{ readOnly: true }}
-                />
-                <AddIcon
-                  onClick={() => handleIncrement(setTankQuantities, key)}
-                  sx={{ cursor: 'pointer' }}
-                />
-              </Box>
-            ))}
-          </Box>
-        </Box>
+        
         
       </Stack>
 
@@ -196,7 +153,7 @@ function AddNewStock() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: '10px',
+            marginTop: '70px',
             borderRadius: '5px',
             backgroundColor: '#344CB7',
             '&:hover': {
