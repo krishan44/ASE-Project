@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
 import CustomerTable from "./Tables/customerTable";
-import AddNew from "./Tables/addNew";
+import AddNew from "./Tables/addNewBusiness";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
-import Delete from "./Notifications/delete";
+import Delete from "./Notifications/deleteBusiness";
 
 function BusinessOrders() {
     const [selectedOption, setSelectedOption] = useState("Business Orders");
