@@ -38,15 +38,16 @@ function Login({ onSubmit }) {
         onSubmit && onSubmit(formData); // Call onSubmit if provided
 
         try {
-            const response = await ApiService.post('/auth/admin/login', formData);
-            const token = response.authToken;
-            login(token);
+            // const response = await ApiService.post('/auth/admin/login', formData);
+            // const token = response.authToken;
+            login('token');
             // console.log("Login successful, token:", token);
             setLoginSuccess(true);
         } catch (error) {
             handleError(error);
             console.error("Login failed:", error); // Log the error for debugging
         }
+        
     };
 
     // Trigger toast and navigate to dashboard when login is successful
