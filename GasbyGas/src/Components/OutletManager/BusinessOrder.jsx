@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
 import CustomerTable from "./Tables/customerTable";
-import AddNew from "./Tables/addNew";
+import AddNew from "./Tables/addNewBusiness";
 import Alert from "@mui/material/Alert";
-// import CheckIcon from "@mui/icons-material/Check";
+import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
-import Delete from "./Notifications/delete";
+import Delete from "./Notifications/deleteBusiness";
 
-function CustomerOrders() {
-    const [selectedOption, setSelectedOption] = useState("Customer Orders");
+function BusinessOrders() {
+    const [selectedOption, setSelectedOption] = useState("Business Orders");
     const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
     const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
     const [isDelAlertVisible,setisDelAlertVisible]= useState(false); //Manage Delete Alert
@@ -47,7 +47,7 @@ function CustomerOrders() {
                 </div>
                 <div className={style.customerOrderContent}>
                     <div className={style.sectionName}>
-                        <h2>Customer Orders</h2>
+                        <h2>Business Orders</h2>
                     </div>
                     <hr />
                     <div className={style.btns}>
@@ -109,7 +109,7 @@ function CustomerOrders() {
     );
 }
 
-export default CustomerOrders;
+export default BusinessOrders;
 
 {/* // <div className={style.alertContainerDel}>
                         //     <Alert severity="error" sx={{width:'400px'}}>

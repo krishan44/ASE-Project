@@ -1,15 +1,18 @@
-import React, { useState } from "react";
-import style from "./customerOrders.module.css";
+import { useState } from "react";
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import style from "./stockOrders.module.css";
 import MainDashboard from "./MainDashboard";
-import CustomerTable from "./Tables/customerTable";
-import AddNew from "./Tables/addNew";
+import edit from "../../assets/table/edit.svg";
+import StockTable from "./Tables/stockTable"
+import AddNewStock from "./Tables/AddnewStock";
 import Alert from "@mui/material/Alert";
-// import CheckIcon from "@mui/icons-material/Check";
+import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
 import Delete from "./Notifications/delete";
 
-function CustomerOrders() {
-    const [selectedOption, setSelectedOption] = useState("Customer Orders");
+function StockOrders(){
+    const [selectedOption, setSelectedOption] = useState("Stock Orders");
     const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
     const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
     const [isDelAlertVisible,setisDelAlertVisible]= useState(false); //Manage Delete Alert
@@ -47,7 +50,7 @@ function CustomerOrders() {
                 </div>
                 <div className={style.customerOrderContent}>
                     <div className={style.sectionName}>
-                        <h2>Customer Orders</h2>
+                        <h2>Stock Orders</h2>
                     </div>
                     <hr />
                     <div className={style.btns}>
@@ -59,10 +62,10 @@ function CustomerOrders() {
                                 Save
                             </button>
                         </div>
-                        <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button>
+   
                     </div>
                     <div className={style.table}>
-                        <CustomerTable />
+                        <StockTable />
                     </div>
                     {/* Alert for Save button */}
                     {isAlertVisible && (
@@ -94,8 +97,8 @@ function CustomerOrders() {
             {/* Popup for AddNew */}
             {isAddNewVisible && (
                 <div className={style.popupOverlay}>
-                    <div className={style.popupContent}>
-                        <AddNew />
+                    <div className={style.popupContent} style={{ height: "400px"}}>
+                        <AddNewStock />
                         <button
                             className={style.closeBtn}
                             onClick={handleCloseAddNew}
@@ -109,11 +112,4 @@ function CustomerOrders() {
     );
 }
 
-export default CustomerOrders;
-
-{/* // <div className={style.alertContainerDel}>
-                        //     <Alert severity="error" sx={{width:'400px'}}>
-                        //     <AlertTitle>Deleted</AlertTitle>
-                        //     This is an Delete Message
-                        //     </Alert>
-                        // </div> */}
+export default StockOrders;

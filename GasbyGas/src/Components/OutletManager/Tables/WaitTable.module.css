@@ -165,6 +165,7 @@ tbody tr.hide td img {
   margin: 0;
   padding: 5px 10px;
   cursor: pointer;
+  width: 100px;
 }
 
 .statusOptions p:hover {
@@ -278,4 +279,24 @@ thead th.active,tbody td.active {
   
   .closeBtn:hover {
     background: #e04343;
+  }
+
+  .delayed {
+    background-color: #848d96; /* Green for Delayed */
+  }
+  
+  .cancelled {
+    background-color: #F44336; /* Red for Cancelled */
+  }
+  
+  .confirmed {
+    background-color: #0064c2; /* Green for Confirmed */
+  }
+  
+  .onRoute {
+    background-color: #cb26e0; /* Purple for On Route */
+  }
+  
+  .delivered {
+    background-color: #3400f1; /* Light Green for Delivered */
   }
