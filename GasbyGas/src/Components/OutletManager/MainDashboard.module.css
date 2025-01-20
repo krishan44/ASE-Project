@@ -99,6 +99,13 @@
     border-radius: 10px 0px 0px 10px;
 }
 
+.Logout{
+    position: relative;
+    top: 80px;
+    left: 100px;
+    cursor: pointer;
+}
+
 .logOutI{
     width: 24px;
     height: 32px;

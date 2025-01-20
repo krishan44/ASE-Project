@@ -4,7 +4,7 @@ import MainDashboard from "./MainDashboard";
 import CustomerTable from "./Tables/customerTable";
 import AddNew from "./Tables/addNew";
 import Alert from "@mui/material/Alert";
-// import CheckIcon from "@mui/icons-material/Check";
+import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
 import Delete from "./Notifications/delete";
 
