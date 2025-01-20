@@ -3,7 +3,7 @@ import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
-const CustomerTable = () => {
+const Business = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
     { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Picked', Total: '$128.90', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
@@ -175,7 +175,7 @@ const TableBody = ({
     <table>
       <thead>
         <tr>
-          {['Token', 'Customer', 'Order', 'Order Date', 'Status', 'Total', 'Tank', ' '].map((key) => (
+          {['Token', 'Business', 'Order', 'Order Date', 'Status', 'Total', 'Tank', ' '].map((key) => (
             <th
               key={key}
               onClick={() => handleSort(key)}
@@ -252,4 +252,4 @@ const TableBody = ({
   </section>
 );
 
-export default CustomerTable;
+export default Business;
