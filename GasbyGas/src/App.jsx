@@ -8,7 +8,9 @@ import Customers from "./Components/OutletManager/customers";
 // import CustomerTable from "./Components/OutletManager/Tables/customerTable";
 import ManageAccounts from "./Components/OutletManager/manageAccount";
 import OutletManager from "./Components/OutletManager/outletManager";
-import Login from './Components/Admin/login';
+import Login from './Components/Login/Login';
+import Registration from './Components/Login/Registration';
+import Verify from './Components/Login/VerificationFlow';
 import { ToastProvider } from './Components/Util/ToastContext';
 import CustomerTable from "./Components/OutletManager/Tables/customerTable";
 import BusinessOrders from "./Components/OutletManager/BusinessOrder";
@@ -18,12 +20,15 @@ import Waitlist from './Components/OutletManager/Waitlist';
 
 function App() {
   return (
-    <ToastProvider>
-      <AuthProvider>
-        <Router>
+
+    <Router>
           <Routes>
             {/* Public Routes */}
-            <Route path="/login/admin" element={<Login />} />
+            <Route path="/" element={<Login />} />
+
+            <Route path="/Registration" element={<Registration />} />
+            Verify
+            <Route path="/Verify" element={<Verify />} />
 
             {/* Protected Routes */}
             <Route
@@ -98,9 +103,8 @@ function App() {
               element={<PrivateRoute><Waitlist /></PrivateRoute>}
             />
           </Routes>
-        </Router>
-      </AuthProvider>
-    </ToastProvider>
+          </Router>
+      
   );
 }
 
