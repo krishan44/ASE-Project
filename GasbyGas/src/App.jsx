@@ -27,81 +27,47 @@ function App() {
             <Route path="/" element={<Login />} />
 
             <Route path="/Registration" element={<Registration />} />
-            Verify
             <Route path="/Verify" element={<Verify />} />
+            <Route path="/customer-dashboard" element={<Overview />} />
+            <Route path="/outlet-dashboard" element={<Delete />} />
 
             {/* Protected Routes */}
             <Route
               path="/dashboard"
               element={
-                <PrivateRoute>
                   <Overview />
-                </PrivateRoute>
               }
             />
             <Route
               path="/orders"
               element={
-                <PrivateRoute>
                   <CustomerOrders />
-                </PrivateRoute>
               }
             />
             <Route
               path="/customers"
               element={
-                <PrivateRoute>
                   <Customers />
-                </PrivateRoute>
               }
             />
             <Route
               path="/manage_accounts"
               element={
-                <PrivateRoute>
                   <ManageAccounts />
-                </PrivateRoute>
               }
             />
             <Route
               path="/outlet_manager"
               element={
-                <PrivateRoute>
                   <OutletManager />
-                </PrivateRoute>
               }
             />
-            <Route path="/"
-              element={
-                <PrivateRoute>
-                  <Overview />
-                </PrivateRoute>
-              }
-            />
+            
 
-            <Route path="/orders"
-              element={
-                <PrivateRoute>
-                  <CustomerOrders />
-                </PrivateRoute>} />
-
-            <Route path="/BusinessOrders"
-              element={
-                <PrivateRoute>
-                  <BusinessOrders />
-                </PrivateRoute>} />
-
-            <Route path="/StockOrders"
-              element={<PrivateRoute><StockOrders
-              /></PrivateRoute>} />
-
-            <Route path="/Delete"
-              element={<PrivateRoute><Delete /></PrivateRoute>}
-            />
-
-            <Route path="/Waitlist Manage"
-              element={<PrivateRoute><Waitlist /></PrivateRoute>}
-            />
+            <Route path="/BusinessOrders" element={<BusinessOrders />}/>
+            <Route path="/StockOrders" element={<StockOrders/> }/>
+            <Route path="/Delete" element={<Delete />}/>
+            <Route path="/Waitlist Manage" element={<Waitlist />}/>
           </Routes>
           </Router>
       

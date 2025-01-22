@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   TextField,
@@ -26,12 +25,51 @@ const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
+
+    try {
+      // Send login request to the backend
+      const response = await fetch('http://localhost:5001/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Redirect based on the user's role
+        switch (result.role) {
+          case 'Customer':
+            navigate('/customer-dashboard');
+            break;
+          case 'Outlet':
+            navigate('/outlet-dashboard');
+            break;
+          case 'Admin':
+            navigate('/admin-dashboard');
+            break;
+          default:
+            alert('Unknown role');
+        }
+      } else {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred during login.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -117,15 +155,11 @@ const Login = () => {
               </Button>
 
               <Typography align="center" color="text.secondary">
-                  Don't have an account?{' '}
-                  <Link to ="/Registration" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
-                  <Box sx={{
-                    cursor:'pointer'
-                  }}>
-                    Register
-                  </Box>
-                  </Link>
-                </Typography>
+                Don't have an account?{' '}
+                <Link to="/Registration" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
+                  <Box sx={{ cursor: 'pointer' }}>Register</Box>
+                </Link>
+              </Typography>
             </Box>
           </Paper>
         </Container>

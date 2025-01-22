@@ -8,11 +8,11 @@ import stock from "../../assets/Pannel/stock.svg";
 import orderstock from "../../assets/Pannel/orderstock.svg";
 import waitlist from "../../assets/Pannel/waitlist.svg";
 import logOut from "../../assets/Pannel/logOut.svg";
-import { useAuth } from '../../Components/AdminAuth/AuthContext';
+
 
 function MainDashboard({ selectedOption, setSelectedOption }) {
 
-  const { logout } = useAuth();
+  
 
   return (
     <div className={style.Maindashboard}>
@@ -23,7 +23,7 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
           </div>
         
         <div className={style.routes}>
-          <Link to="/" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
+          <Link to="/dashboard" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
             <img src={dashboard} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Overview" ? style.selected : ""}`}>Overview</span>
           </Link>
