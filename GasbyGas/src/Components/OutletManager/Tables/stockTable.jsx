@@ -6,9 +6,9 @@ import edit from '../../../assets/table/edit.svg';
 const StockTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delayed', Total: '$128.90'},
+    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delayed', Total: '$128.90' },
     { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50' },
-    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40'},
+    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40' },
     { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40' },
     { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Delivered', Total: '$210.40' },
   ]);
@@ -80,7 +80,7 @@ const StockTable = () => {
     }
     return 0;
   });
- 
+
 
   return (
     <div className={style.App}>
@@ -219,7 +219,7 @@ const TableBody = ({
               </div>
             </td>
             <td>{row.Total}</td>
-            
+
           </tr>
         ))}
       </tbody>

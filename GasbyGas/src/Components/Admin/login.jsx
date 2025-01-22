@@ -16,7 +16,7 @@ function Login({ onSubmit }) {
         password: "",
     };
     const [loginSuccess, setLoginSuccess] = useState(false); // Track login success state
-    const { login } = useAuth();
+    // const { login } = useAuth();
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState(initialFormData);
@@ -36,36 +36,36 @@ function Login({ onSubmit }) {
             return;
         }
         onSubmit && onSubmit(formData); // Call onSubmit if provided
-
-        try {
+        navigate('/dashboard');
+        // try {
             // const response = await ApiService.post('/auth/admin/login', formData);
             // const token = response.authToken;
-            login('token');
+            // login('token');
             // console.log("Login successful, token:", token);
-            setLoginSuccess(true);
-        } catch (error) {
-            handleError(error);
-            console.error("Login failed:", error); // Log the error for debugging
-        }
+        //     setLoginSuccess(true);
+        // } catch (error) {
+        //     handleError(error);
+        //     console.error("Login failed:", error); // Log the error for debugging
+        // }
         
     };
 
     // Trigger toast and navigate to dashboard when login is successful
-    useEffect(() => {
-        if (loginSuccess) {
-            showToast('Login Successful', 'success');
-            setTimeout(() => {
-                navigate('/dashboard'); // Navigate after a delay to ensure toast shows
-            }, 1000); // Delay navigation by 1 second
-        }
-    }, [loginSuccess, showToast, navigate]);
+    // useEffect(() => {
+    //     if (loginSuccess) {
+    //         showToast('Login Successful', 'success');
+    //         setTimeout(() => {
+    //             navigate('/dashboard'); // Navigate after a delay to ensure toast shows
+    //         }, 1000); // Delay navigation by 1 second
+    //     }
+    // }, [loginSuccess, showToast, navigate]);
 
     // Reset form fields and validation
-    useEffect(() => {
-        if (formRef.current) {
-            formRef.current.reset();
-        }
-    }, [loginSuccess]);
+    // useEffect(() => {
+    //     if (formRef.current) {
+    //         formRef.current.reset();
+    //     }
+    // }, [loginSuccess]);
 
     return (
         <MDBContainer fluid className={`p-3 my-5 ${style.hcustom}`}>
