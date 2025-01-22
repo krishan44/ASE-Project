@@ -1,6 +1,5 @@
 import style from "./customers.module.css";
 import React, { useEffect, useState } from 'react';
-import ApiService from "../../services/apiService";
 
 function customers(){
 
