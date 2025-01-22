@@ -1,21 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
 const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Picked', Total: '$128.90', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
   const [editingStatusId, setEditingStatusId] = useState(null);
   const [popupData, setPopupData] = useState(null); // State for popup data
   const [popupType, setPopupType] = useState(null); // State for popup type ('Orders' or 'Tank')
+
+  // Fetch data from Flask backend
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/customer-orders');
+        if (!response.ok) {
+          throw new Error('Failed to fetch data');
+        }
+        const data = await response.json();
+        setTableData(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Handle search input
   const handleSearch = (e) => {
@@ -106,7 +118,8 @@ const CustomerTable = () => {
           handleStatusChange={handleStatusChange}
           editingStatusId={editingStatusId}
           setEditingStatusId={setEditingStatusId}
-          handleView={handleView} // Pass handleView to TableBody
+          handleView={handleView}
+          getStatusStyle={getStatusStyle} // Pass getStatusStyle as a prop
         />
       </main>
 
@@ -135,18 +148,7 @@ const CustomerTable = () => {
     </div>
   );
 };
-const getStatusStyle = (status) => {
-  switch (status.toLowerCase()) {
-    case 'picked':
-      return { backgroundColor: '#4CAF50' }; // Green for Picked
-    case 'cancelled':
-      return { backgroundColor: '#F44336' }; // Red for Cancelled
-    case 'arrived':
-      return { backgroundColor: '#4379F2' }; // Blue for Arrived
-    default:
-      return {};
-  }
-};
+
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -169,7 +171,8 @@ const TableBody = ({
   handleStatusChange,
   editingStatusId,
   setEditingStatusId,
-  handleView, // Receive handleView from parent
+  handleView,
+  getStatusStyle, // Receive getStatusStyle as a prop
 }) => (
   <section className={style.table__body}>
     <table>
@@ -208,7 +211,7 @@ const TableBody = ({
               <div className={style.statusContainer}>
                 <p
                   className={`${style.status} ${style[row.Status.toLowerCase()]}`}
-                  style={getStatusStyle(row.Status)}
+                  style={getStatusStyle(row.Status)} // Use getStatusStyle here
                   onClick={() => setEditingStatusId(row.id)}
                 >
                   {row.Status}
@@ -221,7 +224,7 @@ const TableBody = ({
                         <p
                           key={status}
                           className={`${style.status} ${style[status.toLowerCase()]}`}
-                          style={getStatusStyle(status)}
+                          style={getStatusStyle(status)} // Use getStatusStyle here
                           onClick={() => handleStatusChange(row.id, status)}
                         >
                           {status}
