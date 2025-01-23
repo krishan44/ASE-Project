@@ -1,0 +1,149 @@
+.sidePannel{
+    width: 300px;
+    height: 100vh;
+    background-color: #577BC1;
+    box-shadow: 5px 0 5px -3px rgba(0, 0, 0, 0.2);
+    font-family: "Poppins", serif;;
+    color: #FFF;
+    position: fixed;
+    overflow-y: auto;
+}
+
+.logo{
+    font-size: 24px;
+    font-weight: 500;
+    color: #000000;
+}
+
+.logo+span{
+    font-size: 12px;
+}
+
+.head{
+    display: flex;
+    flex-direction: column;
+    margin-top: auto;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: auto;
+}
+
+.routes{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 20px;
+    padding-left: 20px;
+    margin-top: 50px;
+}
+
+.imageContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.nameContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+}
+
+.optionContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-left: 20px;
+    padding: 10px;
+    cursor: pointer;
+    text-decoration: none; /* Remove underline */
+    color: inherit; /* Inherit color from parent */
+    transition: background-color 0.3s;
+}
+
+
+
+.option{
+    padding-left: 10px;
+    position: relative;
+    /* left: 100px; */
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+    height: 40px;
+    transition: 0.2s ease;
+    padding-top: 5px;
+    margin-left: 10px;
+    font-size: 16px;
+}
+
+.option:hover{
+    background-color: #edf0f2;
+    color: #000;
+    border-radius: 10px 0px 0px 10px;
+    font-size: 18px;
+}
+
+.panelIcon{
+    height: 24px;
+    width: 24px;
+    margin-right: 10px;
+    margin-bottom: 8px;
+}
+
+.selected{
+    background-color: #edf0f2;
+    color: #000;
+    border-radius: 10px 0px 0px 10px;
+}
+
+.Logout{
+    position: relative;
+    top: 80px;
+    left: 100px;
+    cursor: pointer;
+}
+
+.logOutI{
+    width: 24px;
+    height: 32px;
+    position: relative;
+    color: #ffffff;
+}
+
+.logOutBtn {
+    width: 100px;
+    height: 45px;
+    background-color: #577BC1;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 5px;
+    margin-right: 20px;
+}
+
+.logOutBtn:hover {
+    color: #000000;
+    background-color: transparent;
+    border: 1px solid #000000;
+    transition: 0.2s ease;
+}
+
+.card{
+    display: flex;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    /* border: 1px solid #ffffff; */
+    border-radius: 8px;
+    margin: 5%;
+    height: 15%;
+}
