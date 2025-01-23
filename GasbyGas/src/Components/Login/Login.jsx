@@ -50,13 +50,13 @@ const Login = () => {
         // Redirect based on the user's role
         switch (result.role) {
           case 'Customer':
-            navigate('/customer-dashboard');
+            navigate('/customer/overview');
             break;
           case 'Outlet':
-            navigate('/outlet-dashboard');
+            navigate('/dashboard');
             break;
           case 'Admin':
-            navigate('/admin-dashboard');
+            navigate('/admin/dashboard');
             break;
           default:
             alert('Unknown role');
@@ -156,7 +156,7 @@ const Login = () => {
 
               <Typography align="center" color="text.secondary">
                 Don't have an account?{' '}
-                <Link to="/Registration" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
+                <Link to="/" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
                   <Box sx={{ cursor: 'pointer' }}>Register</Box>
                 </Link>
               </Typography>

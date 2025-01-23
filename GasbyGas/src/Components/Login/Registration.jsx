@@ -29,9 +29,9 @@ const theme = createTheme({
 });
 
 const sriLankanDistricts = [
-  "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", 
-  "Hambantota", "Jaffna", "Kalutara", "Kandy", "Kegalle", "Kilinochchi", "Kurunegala", 
-  "Mannar", "Matale", "Matara", "Moneragala", "Mullaitivu", "Nuwara Eliya", "Polonnaruwa", 
+  "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha",
+  "Hambantota", "Jaffna", "Kalutara", "Kandy", "Kegalle", "Kilinochchi", "Kurunegala",
+  "Mannar", "Matale", "Matara", "Moneragala", "Mullaitivu", "Nuwara Eliya", "Polonnaruwa",
   "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
 ];
 
@@ -103,7 +103,7 @@ const Registration = ({ closeForm }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateStep1()) return;
-  
+
     // Prepare the data to send to the backend
     const registrationData = {
       username: formData.username,
@@ -116,7 +116,7 @@ const Registration = ({ closeForm }) => {
       date_of_birth: formData.date_of_birth,
       gender: formData.gender
     };
-  
+
     try {
       const response = await fetch('http://localhost:5001/register', {
         method: 'POST',
@@ -125,13 +125,13 @@ const Registration = ({ closeForm }) => {
         },
         body: JSON.stringify(registrationData),
       });
-  
+
       const result = await response.json();
       if (response.ok) {
         alert('Registration successful!');
         console.log('User ID:', result.UserId);
         closeForm(); // Close the form
-  
+
         // Pass phoneNumber and email as state when navigating to /Verify
         navigate('/Verify', {
           state: {
@@ -154,7 +154,7 @@ const Registration = ({ closeForm }) => {
   };
 
 
-      
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -178,8 +178,8 @@ const Registration = ({ closeForm }) => {
             <CloseIcon />
           </IconButton>
 
-          <Typography variant="h4" component="h1" sx={{ 
-            mb: 3, 
+          <Typography variant="h4" component="h1" sx={{
+            mb: 3,
             fontWeight: 700,
             pb: 1,
             position: 'relative',
@@ -344,11 +344,15 @@ const Registration = ({ closeForm }) => {
                   />
                 </Grid>
               </Grid>
-              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" type="submit">
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                <Button variant="contained" type="submit" color="success">
                   Submit
                 </Button>
+                <Button variant="contained" color="primary" type="button" onClick={() => navigate('/login')}>
+                  Login
+                </Button>
               </Box>
+
             </form>
           )}
         </Paper>

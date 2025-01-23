@@ -112,8 +112,8 @@ function App() {
     // </ToastProvider>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        {/* <Route path="/login" element={<Login />} /> */}
+        <Route path="/" element={<Registration />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Overview />} />
         <Route path="/orders" element={<CustomerOrders />} />
         <Route path="/customers" element={<Customers />} />
