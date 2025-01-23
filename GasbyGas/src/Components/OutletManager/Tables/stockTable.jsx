@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import style from './StockTable.module.css';
 import search from '../../../assets/table/search.svg';
-import edit from '../../../assets/table/edit.svg';
 
-const StockTable = ({ outname }) => {
+const StockTable = ({ branch }) => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
-  const [editingStatusId, setEditingStatusId] = useState(null);
   const [popupData, setPopupData] = useState(null);
   const [popupType, setPopupType] = useState(null);
 
-  // Fetch outlet orders based on the logged-in outlet's outname
+  // Debugging: Log the branch prop
+  console.log("Received branch prop in StockTable:", branch);
+
+  // Fetch outlet orders based on the logged-in outlet's branch
   useEffect(() => {
     const fetchOutletOrders = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/outlet-orders/${outname}`);
+        if (!branch) {
+          console.error("Branch is null or undefined");
+          return;
+        }
+
+        const response = await fetch(`http://localhost:5001/outlet-orders/${branch}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -27,19 +33,11 @@ const StockTable = ({ outname }) => {
     };
 
     fetchOutletOrders();
-  }, [outname]);
+  }, [branch]);
 
   // Handle search input
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
-  };
-
-  // Handle status change
-  const handleStatusChange = (id, newStatus) => {
-    setTableData((prevData) =>
-      prevData.map((row) => (row.id === id ? { ...row, Status: newStatus } : row))
-    );
-    setEditingStatusId(null);
   };
 
   // Handle sorting
@@ -101,9 +99,6 @@ const StockTable = ({ outname }) => {
           data={sortedData}
           handleSort={handleSort}
           sortConfig={sortConfig}
-          handleStatusChange={handleStatusChange}
-          editingStatusId={editingStatusId}
-          setEditingStatusId={setEditingStatusId}
           handleView={handleView}
         />
       </main>
@@ -134,6 +129,7 @@ const StockTable = ({ outname }) => {
   );
 };
 
+// TableHeader Component
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -149,6 +145,7 @@ const TableHeader = ({ searchValue, handleSearch }) => (
   </section>
 );
 
+// Get status class based on status value
 const getStatusClass = (status) => {
   switch (status.toLowerCase()) {
     case 'delayed':
@@ -164,13 +161,11 @@ const getStatusClass = (status) => {
   }
 };
 
+// TableBody Component
 const TableBody = ({
   data,
   handleSort,
   sortConfig,
-  handleStatusChange,
-  editingStatusId,
-  setEditingStatusId,
   handleView,
 }) => (
   <section className={style.table__body}>
@@ -210,25 +205,9 @@ const TableBody = ({
               <div className={style.statusContainer}>
                 <p
                   className={`${style.status} ${getStatusClass(row.Status)}`}
-                  onClick={() => setEditingStatusId(row.id)}
                 >
                   {row.Status}
                 </p>
-                {editingStatusId === row.id && (
-                  <div className={style.statusOptions}>
-                    {['Delivered', 'Cancelled', 'Delayed', 'Confirmed']
-                      .filter((status) => status.toLowerCase() !== row.Status.toLowerCase())
-                      .map((status) => (
-                        <p
-                          key={status}
-                          className={`${style.status} ${getStatusClass(status)}`}
-                          onClick={() => handleStatusChange(row.id, status)}
-                        >
-                          {status}
-                        </p>
-                      ))}
-                  </div>
-                )}
               </div>
             </td>
             <td>{row.Total}</td>

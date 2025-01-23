@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
 import Business from "./Tables/Business";
 import AddNew from "./Tables/addNewBusiness";
 import Alert from "@mui/material/Alert";
-import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
 import Delete from "./Notifications/deleteBusiness";
 
@@ -12,8 +11,22 @@ function BusinessOrders() {
     const [selectedOption, setSelectedOption] = useState("Business Orders");
     const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
     const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
-    const [isDelAlertVisible,setisDelAlertVisible]= useState(false); //Manage Delete Alert
+    const [isDelAlertVisible, setisDelAlertVisible] = useState(false); // Manage Delete Alert
+    const [loggedInUserBranch, setLoggedInUserBranch] = useState(null); // State for the logged-in user's branch
+    const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
 
+    // Fetch the logged-in user's branch from localStorage when the component mounts
+    useEffect(() => {
+        const branch = localStorage.getItem("userBranch");
+        if (branch) {
+            setLoggedInUserBranch(branch);
+            setError(null);
+        } else {
+            setError("Branch information not found. Please log in again.");
+        }
+        setIsLoading(false);
+    }, []);
 
     const handleAddClick = () => {
         setIsAddNewVisible(true); // Show the AddNew popup
@@ -28,13 +41,13 @@ function BusinessOrders() {
         setTimeout(() => setIsAlertVisible(false), 3000); // Hide the alert after 3 seconds
     };
 
-    const handleDeleteClick = () =>{
+    const handleDeleteClick = () => {
         setisDelAlertVisible(true);
-    }
+    };
 
-    const handleDeleteClose=()=>{
+    const handleDeleteClose = () => {
         setisDelAlertVisible(false);
-    }
+    };
 
     return (
         <>
@@ -62,31 +75,39 @@ function BusinessOrders() {
                         <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button>
                     </div>
                     <div className={style.table}>
-                        <Business />
+                        {/* Show loading or error message while fetching the branch */}
+                        {isLoading ? (
+                            <p>Loading...</p>
+                        ) : error ? (
+                            <p style={{ color: "red" }}>{error}</p>
+                        ) : (
+                            /* Pass the dynamic branch prop to Business */
+                            <Business branch={loggedInUserBranch} />
+                        )}
                     </div>
                     {/* Alert for Save button */}
                     {isAlertVisible && (
                         <div className={style.alertContainer}>
                             <Alert severity="success">
-                            <AlertTitle>Success</AlertTitle>
-                            This is a success Alert with an encouraging title.
+                                <AlertTitle>Success</AlertTitle>
+                                This is a success Alert with an encouraging title.
                             </Alert>
                         </div>
                     )}
 
+                    {/* Delete Confirmation Popup */}
                     {isDelAlertVisible && (
-                         <div className={style.DelpopupOverlay}>
-                         <div className={style.DelpopupContent}>
-                             <Delete />
-                             <button
-                                 className={style.closeBtn}
-                                 onClick={handleDeleteClose}
-                             >
-                                 Close
-                             </button>
-                         </div>
-                     </div>
-                        
+                        <div className={style.DelpopupOverlay}>
+                            <div className={style.DelpopupContent}>
+                                <Delete onClose={handleDeleteClose} />
+                                <button
+                                    className={style.closeBtn}
+                                    onClick={handleDeleteClose}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
@@ -110,10 +131,3 @@ function BusinessOrders() {
 }
 
 export default BusinessOrders;
-
-{/* // <div className={style.alertContainerDel}>
-                        //     <Alert severity="error" sx={{width:'400px'}}>
-                        //     <AlertTitle>Deleted</AlertTitle>
-                        //     This is an Delete Message
-                        //     </Alert>
-                        // </div> */}

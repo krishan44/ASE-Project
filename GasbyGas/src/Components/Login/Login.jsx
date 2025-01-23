@@ -29,7 +29,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setIsLoading(true);
+
     try {
       const response = await fetch('http://localhost:5001/login', {
         method: 'POST',
@@ -41,13 +42,18 @@ const Login = () => {
           password: password,
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         // Store user information in local storage
         localStorage.setItem('user', JSON.stringify(result));
-  
+
+        // Store the branch information in localStorage
+        if (result.branch) {
+          localStorage.setItem('userBranch', result.branch.outlet || result.branch.name); // Use 'outlet' for Customer/Business, 'name' for Outlet
+        }
+
         // Redirect based on the user's role
         switch (result.role) {
           case 'Customer':
@@ -71,6 +77,8 @@ const Login = () => {
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred during login.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
