@@ -23,7 +23,7 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
           </div>
         
         <div className={style.routes}>
-          <Link to="/dashboard" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
+          <Link to="/outlet_manager" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
             <img src={dashboard} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Overview" ? style.selected : ""}`}>Overview</span>
           </Link>

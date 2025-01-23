@@ -54,11 +54,14 @@ const Registration = ({ closeForm }) => {
     outlet: "",
     username: "",
     password: "",
-    confirmPassword: "" // Add confirmPassword field
+    confirmPassword: "",
+    type: "customer", // Default to customer
+    business_registration_number: "" // Only for business type
   });
   const [errors, setErrors] = useState({});
   const [openPopup, setOpenPopup] = useState(true); // Controls the popup visibility
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
@@ -68,13 +71,16 @@ const Registration = ({ closeForm }) => {
   };
 
   const validatePopup = () => {
-    const { outlet, username, password, confirmPassword } = formData;
+    const { outlet, username, password, confirmPassword, type, business_registration_number } = formData;
     const newErrors = {};
     if (!outlet) newErrors.outlet = "Outlet is required.";
     if (!username) newErrors.username = "Username is required.";
     if (!password) newErrors.password = "Password is required.";
     if (!confirmPassword) newErrors.confirmPassword = "Confirm Password is required.";
     if (password !== confirmPassword) newErrors.confirmPassword = "Passwords do not match.";
+    if (type === "business" && !business_registration_number) {
+      newErrors.business_registration_number = "Business Registration Number is required.";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -100,10 +106,11 @@ const Registration = ({ closeForm }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateStep1()) return;
-  
+
     // Prepare the data to send to the backend
     const registrationData = {
       username: formData.username,
@@ -114,9 +121,11 @@ const Registration = ({ closeForm }) => {
       address: formData.address,
       outlet: formData.outlet,
       date_of_birth: formData.date_of_birth,
-      gender: formData.gender
+      gender: formData.gender,
+      type: formData.type,
+      business_registration_number: formData.business_registration_number
     };
-  
+
     try {
       const response = await fetch('http://localhost:5001/register', {
         method: 'POST',
@@ -125,13 +134,13 @@ const Registration = ({ closeForm }) => {
         },
         body: JSON.stringify(registrationData),
       });
-  
+
       const result = await response.json();
       if (response.ok) {
         alert('Registration successful!');
         console.log('User ID:', result.UserId);
         closeForm(); // Close the form
-  
+
         // Pass phoneNumber and email as state when navigating to /Verify
         navigate('/Verify', {
           state: {
@@ -152,9 +161,6 @@ const Registration = ({ closeForm }) => {
       });
     }
   };
-
-
-      
 
   return (
     <ThemeProvider theme={theme}>
@@ -196,7 +202,7 @@ const Registration = ({ closeForm }) => {
             Registration
           </Typography>
 
-          {/* Popup for Username, Password, and Outlet */}
+          {/* Popup for Username, Password, Outlet, and Type */}
           <Dialog open={openPopup} onClose={() => setOpenPopup(false)}>
             <DialogTitle>Enter Your Details</DialogTitle>
             <DialogContent>
@@ -254,6 +260,33 @@ const Registration = ({ closeForm }) => {
                     helperText={errors.confirmPassword}
                   />
                 </Grid>
+                <Grid item xs={12}>
+                  <FormControl fullWidth error={!!errors.type}>
+                    <InputLabel>Type</InputLabel>
+                    <Select
+                      name="type"
+                      value={formData.type}
+                      onChange={handleChange}
+                      label="Type"
+                    >
+                      <MenuItem value="customer">Customer</MenuItem>
+                      <MenuItem value="business">Business</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                {formData.type === "business" && (
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Business Registration Number"
+                      name="business_registration_number"
+                      value={formData.business_registration_number}
+                      onChange={handleChange}
+                      error={!!errors.business_registration_number}
+                      helperText={errors.business_registration_number}
+                    />
+                  </Grid>
+                )}
               </Grid>
             </DialogContent>
             <DialogActions>

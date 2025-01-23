@@ -111,11 +111,15 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         {/* <Route path="/login" element={<Login />} /> */}
-        <Route path="/dashboard" element={<Overview />} />
+        <Route path="/Registration" element={<Registration />} />
+        <Route path="/Verify" element={<Verify />} />
+        <Route path="/customer-dashboard" element={<Overview />} />
         <Route path="/orders" element={<CustomerOrders />} />
         <Route path="/customers" element={<Customers />} />
+
+        <Route path="/outlet-dashboard" element={<Overview />} />
         <Route path="/manage_accounts" element={<ManageAccounts />} />
-        <Route path="/outlet_manager" element={<OutletManager />} />
+        <Route path="/outlet_manager" element={<Overview />} />
         <Route path="/orders" element={<CustomerOrders />} />
         <Route path="/business_orders" element={<BusinessOrders />} />
         <Route path="/stock_orders" element={<StockOrders />} />

@@ -12,8 +12,10 @@ function CustomerOrders() {
     const [selectedOption, setSelectedOption] = useState("Customer Orders");
     const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
     const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
-    const [isDelAlertVisible,setisDelAlertVisible]= useState(false); //Manage Delete Alert
+    const [isDelAlertVisible, setisDelAlertVisible] = useState(false); // Manage Delete Alert
 
+    // Replace 'Outlet1' with the actual branch from the logged-in user
+    const loggedInUserBranch = 'Kandy';
 
     const handleAddClick = () => {
         setIsAddNewVisible(true); // Show the AddNew popup
@@ -28,13 +30,13 @@ function CustomerOrders() {
         setTimeout(() => setIsAlertVisible(false), 3000); // Hide the alert after 3 seconds
     };
 
-    const handleDeleteClick = () =>{
+    const handleDeleteClick = () => {
         setisDelAlertVisible(true);
-    }
+    };
 
-    const handleDeleteClose=()=>{
+    const handleDeleteClose = () => {
         setisDelAlertVisible(false);
-    }
+    };
 
     return (
         <>
@@ -62,31 +64,32 @@ function CustomerOrders() {
                         <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button>
                     </div>
                     <div className={style.table}>
-                        <CustomerTable />
+                        {/* Pass the branch prop to CustomerTable */}
+                        <CustomerTable branch={loggedInUserBranch} />
                     </div>
                     {/* Alert for Save button */}
                     {isAlertVisible && (
                         <div className={style.alertContainer}>
                             <Alert severity="success">
-                            <AlertTitle>Success</AlertTitle>
-                            This is a success Alert with an encouraging title.
+                                <AlertTitle>Success</AlertTitle>
+                                This is a success Alert with an encouraging title.
                             </Alert>
                         </div>
                     )}
 
+                    {/* Delete Confirmation Popup */}
                     {isDelAlertVisible && (
-                         <div className={style.DelpopupOverlay}>
-                         <div className={style.DelpopupContent}>
-                             <Delete />
-                             <button
-                                 className={style.closeBtn}
-                                 onClick={handleDeleteClose}
-                             >
-                                 Close
-                             </button>
-                         </div>
-                     </div>
-                        
+                        <div className={style.DelpopupOverlay}>
+                            <div className={style.DelpopupContent}>
+                                <Delete onClose={handleDeleteClose} />
+                                <button
+                                    className={style.closeBtn}
+                                    onClick={handleDeleteClose}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
@@ -110,10 +113,3 @@ function CustomerOrders() {
 }
 
 export default CustomerOrders;
-
-{/* // <div className={style.alertContainerDel}>
-                        //     <Alert severity="error" sx={{width:'400px'}}>
-                        //     <AlertTitle>Deleted</AlertTitle>
-                        //     This is an Delete Message
-                        //     </Alert>
-                        // </div> */}

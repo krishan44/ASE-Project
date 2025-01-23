@@ -3,31 +3,46 @@ import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
-const CustomerTable = () => {
+const CustomerTable = ({ branch }) => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
   const [editingStatusId, setEditingStatusId] = useState(null);
-  const [popupData, setPopupData] = useState(null); // State for popup data
-  const [popupType, setPopupType] = useState(null); // State for popup type ('Orders' or 'Tank')
+  const [popupData, setPopupData] = useState(null);
+  const [popupType, setPopupType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // Fetch data from Flask backend
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5001/customer-orders');
+        const response = await fetch(`http://localhost:5001/customer-orders/${branch}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
         const data = await response.json();
         setTableData(data);
+        setError(null);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [branch]);
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
+
 
   // Handle search input
   const handleSearch = (e) => {

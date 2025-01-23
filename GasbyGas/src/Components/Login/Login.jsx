@@ -29,10 +29,8 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-
+  
     try {
-      // Send login request to the backend
       const response = await fetch('http://localhost:5001/login', {
         method: 'POST',
         headers: {
@@ -43,14 +41,20 @@ const Login = () => {
           password: password,
         }),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
+        // Store user information in local storage
+        localStorage.setItem('user', JSON.stringify(result));
+  
         // Redirect based on the user's role
         switch (result.role) {
           case 'Customer':
             navigate('/customer-dashboard');
+            break;
+          case 'Business':
+            navigate('/business-dashboard');
             break;
           case 'Outlet':
             navigate('/outlet-dashboard');
@@ -67,8 +71,6 @@ const Login = () => {
     } catch (error) {
       console.error('Error:', error);
       alert('An error occurred during login.');
-    } finally {
-      setIsLoading(false);
     }
   };
 

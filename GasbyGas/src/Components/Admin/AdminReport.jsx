@@ -1,2 +1,4 @@
-function AdminReport(){}
+function AdminReport(){
+    
+}
 export default AdminReport

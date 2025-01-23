@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import style from "./customerOrders.module.css";
 import MainDashboard from "./MainDashboard";
-import CustomerTable from "./Tables/customerTable";
+import Business from "./Tables/Business";
 import AddNew from "./Tables/addNewBusiness";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
@@ -62,7 +62,7 @@ function BusinessOrders() {
                         <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button>
                     </div>
                     <div className={style.table}>
-                        <CustomerTable />
+                        <Business />
                     </div>
                     {/* Alert for Save button */}
                     {isAlertVisible && (
