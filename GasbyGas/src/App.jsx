@@ -21,6 +21,7 @@ import AdminOverview from './Components/Admin/Overview';
 import StockOrderRequests from './Components/Admin/StockOrder';
 import AccountManage from './Components/Admin/manageAccount';
 import AdminReports from './Components/Admin/AdminReport';
+import OrderGaz from './Components/Customer/OrderGaz';
 
 function App() {
   return (
@@ -130,6 +131,8 @@ function App() {
         <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
         <Route path="/admin/account_manage" element={<AccountManage />} />
         <Route path="/admin/reports" element={<AdminReports />} />
+
+        <Route path="/customer/gaz_oreder" element={<OrderGaz />} />
 
       </Routes>
     </Router>
