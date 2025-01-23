@@ -21,7 +21,9 @@ import AdminOverview from './Components/Admin/Overview';
 import StockOrderRequests from './Components/Admin/StockOrder';
 import AccountManage from './Components/Admin/manageAccount';
 import AdminReports from './Components/Admin/AdminReport';
-import OrderGaz from './Components/Customer/OrderGaz';
+import OrderHistory from './Components/Customer/OrderHistory';
+import CusOrders from './Components/Customer/cusOrders';
+import CusProfile from './Components/Customer/CustomerProfile';
 
 function App() {
   return (
@@ -128,7 +130,9 @@ function App() {
         <Route path="/admin/account_manage" element={<AccountManage />} />
         <Route path="/admin/reports" element={<AdminReports />} />
 
-        <Route path="/customer/gaz_oreder" element={<OrderGaz />} />
+        <Route path="/customer/overview" element={<CusOrders />} />
+        <Route path="/customer/order_history" element={<OrderHistory />} />
+        <Route path="/customer/profile" element={<CusProfile />} />
 
       </Routes>
     </Router>
