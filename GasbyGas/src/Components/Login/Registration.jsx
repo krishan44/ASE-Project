@@ -29,9 +29,9 @@ const theme = createTheme({
 });
 
 const sriLankanDistricts = [
-  "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha", 
-  "Hambantota", "Jaffna", "Kalutara", "Kandy", "Kegalle", "Kilinochchi", "Kurunegala", 
-  "Mannar", "Matale", "Matara", "Moneragala", "Mullaitivu", "Nuwara Eliya", "Polonnaruwa", 
+  "Ampara", "Anuradhapura", "Badulla", "Batticaloa", "Colombo", "Galle", "Gampaha",
+  "Hambantota", "Jaffna", "Kalutara", "Kandy", "Kegalle", "Kilinochchi", "Kurunegala",
+  "Mannar", "Matale", "Matara", "Moneragala", "Mullaitivu", "Nuwara Eliya", "Polonnaruwa",
   "Puttalam", "Ratnapura", "Trincomalee", "Vavuniya"
 ];
 
@@ -184,8 +184,8 @@ const Registration = ({ closeForm }) => {
             <CloseIcon />
           </IconButton>
 
-          <Typography variant="h4" component="h1" sx={{ 
-            mb: 3, 
+          <Typography variant="h4" component="h1" sx={{
+            mb: 3,
             fontWeight: 700,
             pb: 1,
             position: 'relative',
@@ -377,11 +377,15 @@ const Registration = ({ closeForm }) => {
                   />
                 </Grid>
               </Grid>
-              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
-                <Button variant="contained" type="submit">
+              <Box sx={{ mt: 3, display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+                <Button variant="contained" type="submit" color="success">
                   Submit
                 </Button>
+                <Button variant="contained" color="primary" type="button" onClick={() => navigate('/login')}>
+                  Login
+                </Button>
               </Box>
+
             </form>
           )}
         </Paper>

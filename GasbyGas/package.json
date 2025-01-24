@@ -12,6 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^3.10.0",
     "@mui/icons-material": "^6.4.0",
     "@mui/material": "^6.4.0",
     "@mui/styled-engine-sc": "^6.4.0",
@@ -25,7 +26,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.1",
     "react-toastify": "^11.0.3",
-    "styled-components": "^6.1.14"
+    "styled-components": "^6.1.14",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
