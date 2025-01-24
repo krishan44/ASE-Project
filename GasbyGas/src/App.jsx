@@ -110,14 +110,7 @@ function App() {
     // </ToastProvider>
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        {/* <Route path="/login" element={<Login />} /> */}
-        <Route path="/Registration" element={<Registration />} />
-        <Route path="/Verify" element={<Verify />} />
-        <Route path="/customer-dashboard" element={<Overview />} />
-        <Route path="/orders" element={<CustomerOrders />} />
-        <Route path="/customers" element={<Customers />} />
-
+        
         <Route path="/outlet-dashboard" element={<Overview />} />
         <Route path="/manage_accounts" element={<ManageAccounts />} />
         <Route path="/outlet_manager" element={<Overview />} />
@@ -132,7 +125,7 @@ function App() {
         <Route path="/admin/account_manage" element={<AccountManage />} />
         <Route path="/admin/reports" element={<AdminReports />} />
 
-        <Route path="/customer/gaz_oreder" element={<OrderGaz />} />
+        <Route path="/customer/gaz_order" element={<OrderGaz />} />
 
       </Routes>
     </Router>
