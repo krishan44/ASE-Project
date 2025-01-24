@@ -1,21 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
-const Business = () => {
+const Business = ({ branch }) => {
   const [searchValue, setSearchValue] = useState('');
-  const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Picked', Total: '$128.90', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Arrived', Total: '$210.40', Tank: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], contact: '07723112123' },
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
   const [editingStatusId, setEditingStatusId] = useState(null);
-  const [popupData, setPopupData] = useState(null); // State for popup data
-  const [popupType, setPopupType] = useState(null); // State for popup type ('Orders' or 'Tank')
+  const [popupData, setPopupData] = useState(null);
+  const [popupType, setPopupType] = useState(null);
+
+  // Fetch business orders for the specific branch
+  useEffect(() => {
+    const fetchBusinessOrders = async () => {
+      try {
+        const response = await fetch(`http://localhost:5001/business-orders/${branch}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setTableData(data);
+      } catch (error) {
+        console.error('Error fetching business orders:', error);
+      }
+    };
+
+    fetchBusinessOrders();
+  }, [branch]);
 
   // Handle search input
   const handleSearch = (e) => {
@@ -81,20 +93,6 @@ const Business = () => {
     return 0;
   });
 
-  // Get status style based on status value
-  const getStatusStyle = (status) => {
-    switch (status.toLowerCase()) {
-      case 'picked':
-        return { backgroundColor: '#4CAF50' }; // Green for Picked
-      case 'cancelled':
-        return { backgroundColor: '#F44336' }; // Red for Cancelled
-      case 'arrived':
-        return { backgroundColor: '#4379F2' }; // Blue for Arrived
-      default:
-        return {};
-    }
-  };
-
   return (
     <div className={style.App}>
       <main className={style.table} id="customers_table">
@@ -106,7 +104,7 @@ const Business = () => {
           handleStatusChange={handleStatusChange}
           editingStatusId={editingStatusId}
           setEditingStatusId={setEditingStatusId}
-          handleView={handleView} // Pass handleView to TableBody
+          handleView={handleView}
         />
       </main>
 
@@ -135,6 +133,7 @@ const Business = () => {
     </div>
   );
 };
+
 const getStatusStyle = (status) => {
   switch (status.toLowerCase()) {
     case 'picked':
@@ -147,6 +146,7 @@ const getStatusStyle = (status) => {
       return {};
   }
 };
+
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -169,7 +169,7 @@ const TableBody = ({
   handleStatusChange,
   editingStatusId,
   setEditingStatusId,
-  handleView, // Receive handleView from parent
+  handleView,
 }) => (
   <section className={style.table__body}>
     <table>

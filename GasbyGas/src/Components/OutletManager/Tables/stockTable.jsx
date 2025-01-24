@@ -1,33 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import style from './StockTable.module.css';
 import search from '../../../assets/table/search.svg';
-import edit from '../../../assets/table/edit.svg';
 
-const StockTable = () => {
+const StockTable = ({ branch }) => {
   const [searchValue, setSearchValue] = useState('');
-  const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '17 Dec, 2022', Status: 'Delayed', Total: '$128.90' },
-    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '27 Aug, 2023', Status: 'Cancelled', Total: '$5350.50' },
-    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40' },
-    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Confirmed', Total: '$210.40' },
-    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '14 Mar, 2023', Status: 'Delivered', Total: '$210.40' },
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
-  const [editingStatusId, setEditingStatusId] = useState(null);
-  const [popupData, setPopupData] = useState(null); // State for popup data
-  const [popupType, setPopupType] = useState(null); // State for popup type ('Orders' or 'Tank')
+  const [popupData, setPopupData] = useState(null);
+  const [popupType, setPopupType] = useState(null);
+
+  // Debugging: Log the branch prop
+  console.log("Received branch prop in StockTable:", branch);
+
+  // Fetch outlet orders based on the logged-in outlet's branch
+  useEffect(() => {
+    const fetchOutletOrders = async () => {
+      try {
+        if (!branch) {
+          console.error("Branch is null or undefined");
+          return;
+        }
+
+        const response = await fetch(`http://localhost:5001/outlet-orders/${branch}`);
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setTableData(data);
+      } catch (error) {
+        console.error('Error fetching outlet orders:', error);
+      }
+    };
+
+    fetchOutletOrders();
+  }, [branch]);
 
   // Handle search input
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
-  };
-
-  // Handle status change
-  const handleStatusChange = (id, newStatus) => {
-    setTableData((prevData) =>
-      prevData.map((row) => (row.id === id ? { ...row, Status: newStatus } : row))
-    );
-    setEditingStatusId(null);
   };
 
   // Handle sorting
@@ -81,7 +91,6 @@ const StockTable = () => {
     return 0;
   });
 
-
   return (
     <div className={style.App}>
       <main className={style.table} id="customers_table">
@@ -90,14 +99,11 @@ const StockTable = () => {
           data={sortedData}
           handleSort={handleSort}
           sortConfig={sortConfig}
-          handleStatusChange={handleStatusChange}
-          editingStatusId={editingStatusId}
-          setEditingStatusId={setEditingStatusId}
-          handleView={handleView} // Pass handleView to TableBody
+          handleView={handleView}
         />
       </main>
 
-      {/* Popup for Orders and Tank */}
+      {/* Popup for Orders */}
       {popupData && (
         <div className={style.popupOverlay}>
           <div className={style.popup}>
@@ -123,6 +129,7 @@ const StockTable = () => {
   );
 };
 
+// TableHeader Component
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -137,28 +144,29 @@ const TableHeader = ({ searchValue, handleSearch }) => (
     </div>
   </section>
 );
+
+// Get status class based on status value
 const getStatusClass = (status) => {
   switch (status.toLowerCase()) {
     case 'delayed':
-      return style.delayed; // CSS class for Delayed
+      return style.delayed;
     case 'cancelled':
-      return style.cancelled; // CSS class for Cancelled
+      return style.cancelled;
     case 'confirmed':
-      return style.confirmed; // CSS class for Confirmed
+      return style.confirmed;
     case 'delivered':
-      return style.delivered; // CSS class for Delivered
+      return style.delivered;
     default:
       return '';
   }
 };
+
+// TableBody Component
 const TableBody = ({
   data,
   handleSort,
   sortConfig,
-  handleStatusChange,
-  editingStatusId,
-  setEditingStatusId,
-  handleView, // Receive handleView from parent
+  handleView,
 }) => (
   <section className={style.table__body}>
     <table>
@@ -197,29 +205,12 @@ const TableBody = ({
               <div className={style.statusContainer}>
                 <p
                   className={`${style.status} ${getStatusClass(row.Status)}`}
-                  onClick={() => setEditingStatusId(row.id)}
                 >
                   {row.Status}
                 </p>
-                {editingStatusId === row.id && (
-                  <div className={style.statusOptions}>
-                    {['Delivered', 'Cancelled', 'Delayed', 'Confirmed']
-                      .filter((status) => status.toLowerCase() !== row.Status.toLowerCase())
-                      .map((status) => (
-                        <p
-                          key={status}
-                          className={`${style.status} ${getStatusClass(status)}`}
-                          onClick={() => handleStatusChange(row.id, status)}
-                        >
-                          {status}
-                        </p>
-                      ))}
-                  </div>
-                )}
               </div>
             </td>
             <td>{row.Total}</td>
-
           </tr>
         ))}
       </tbody>

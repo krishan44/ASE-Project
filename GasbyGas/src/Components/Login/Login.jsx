@@ -32,7 +32,6 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Send login request to the backend
       const response = await fetch('http://localhost:5001/login', {
         method: 'POST',
         headers: {
@@ -47,10 +46,21 @@ const Login = () => {
       const result = await response.json();
 
       if (response.ok) {
+        // Store user information in local storage
+        localStorage.setItem('user', JSON.stringify(result));
+
+        // Store the branch information in localStorage
+        if (result.branch) {
+          localStorage.setItem('userBranch', result.branch.outlet || result.branch.name); // Use 'outlet' for Customer/Business, 'name' for Outlet
+        }
+
         // Redirect based on the user's role
         switch (result.role) {
           case 'Customer':
             navigate('/customer/overview');
+            break;
+          case 'Business':
+            navigate('/business-dashboard');
             break;
           case 'Outlet':
             navigate('/dashboard');
