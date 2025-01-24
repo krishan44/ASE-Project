@@ -1,0 +1,185 @@
+.sidepanel {
+    height: 100vh;
+    width: 300px;
+}
+
+.customerOrders {
+    display: flex;
+    background-color: #edf0f2;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.customerOrderContent {
+    background-color: #edf0f2;
+    width: 100%;
+    margin-left: 50px;
+    min-height: 100vh;
+    padding-bottom: 30px;
+}
+
+.sectionName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 2px;
+    font-size: 12px;
+    margin-top: 20px;
+    font-weight: 900;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    font-family: "Manrope", serif;
+}
+
+.table {
+    width: 95%;
+    height: 650px;
+    background-color: #FFF;
+    margin-left: 30px;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 5px 0 5px -3px rgba(101, 169, 242, 0.2);
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; 
+}
+
+.btns {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    position: relative;
+    margin-left: 50px;
+    margin-bottom: 0px;
+    margin-right: 50px;
+}
+
+.addBtn {
+    width: 80px;
+    height: 45px;
+    background-color: #344CB7;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.addBtn:hover {
+    color: #344CB7;
+    background-color: transparent;
+    border: 1px solid #344CB7;
+    transition: 0.2s ease;
+}
+
+.delBtn {
+    width: 80px;
+    height: 45px;
+    background-color: #FA4032;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delBtn:hover {
+    color: #FA4032;
+    background-color: transparent;
+    border: 1px solid #FA4032;
+    transition: 0.2s ease;
+}
+
+.UpdateBtn {
+    width: 80px;
+    height: 45px;
+    background-color: #16C47F;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.UpdateBtn:hover {
+    color: #16C47F;
+    background-color: transparent;
+    border: 1px solid #16C47F;
+    transition: 0.2s ease;
+}
+
+.editIcon {
+    height: 20px;
+    width: 20px;
+}
+.popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.popupContent {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+}
+
+.closeBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #d84040;
+}
+
+.closeBtn:hover {
+    color: #b02020;
+}
+
+.alertContainer{
+    position: absolute;
+    top: 70px;
+    left: 650px;
+}
+
+.alertContainerDel{
+    position: absolute;
+    top: 160px;
+    left: 700px;
+}
+
+.DelpopupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.DelpopupContent {
+    background: white;
+    padding: 20px;
+    margin-left: 250px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+}
+
