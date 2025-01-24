@@ -381,9 +381,7 @@ const Registration = ({ closeForm }) => {
                 <Button variant="contained" type="submit" color="success">
                   Submit
                 </Button>
-                <Button variant="contained" color="primary" type="button" onClick={() => navigate('/login')}>
-                  Login
-                </Button>
+                
               </Box>
 
             </form>

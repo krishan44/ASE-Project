@@ -1,48 +1,65 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
-import edit from '../../../assets/table/edit.svg';
 
 const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
-  const [editingStatusId, setEditingStatusId] = useState(null);
-  const [popupData, setPopupData] = useState(null); // State for popup data
-  const [popupType, setPopupType] = useState(null); // State for popup type ('Orders' or 'Tank')
+  const [popupData, setPopupData] = useState(null);
+  const [popupType, setPopupType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Fetch data from Flask backend
   useEffect(() => {
     const fetchData = async () => {
+      const customerid = localStorage.getItem('customerId'); // Use 'customerId' (uppercase I)
+      if (!customerid) {
+        console.error("Customer ID not found in localStorage");
+        setError('Customer ID not found. Please log in again.');
+        setIsLoading(false);
+        return;
+      }
+
+      console.log(`Fetching orders for customer ID: ${customerid}`);
+
       try {
-        const response = await fetch('http://localhost:5001/customer-orders');
+        const response = await fetch(`http://localhost:5001/customer-orders/${customerid}`);
+        console.log("Response received:", response);
+
         if (!response.ok) {
-          throw new Error('Failed to fetch data');
+          const errorText = await response.text();
+          console.error("Failed to fetch data. Response status:", response.status, "Response text:", errorText);
+          throw new Error(`Failed to fetch data: ${response.status} ${errorText}`);
         }
+
         const data = await response.json();
-        setTableData(data);
+        console.log("Data received:", data);
+
+        if (data.message) {
+          console.log("No orders found for this customer");
+          setTableData([]);
+          setError(data.message);
+        } else {
+          console.log("Orders data set to state");
+          setTableData(data);
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
+        setError('Failed to fetch orders. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, []);
 
-  // Handle search input
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
   };
 
-  // Handle status change
-  const handleStatusChange = (id, newStatus) => {
-    setTableData((prevData) =>
-      prevData.map((row) => (row.id === id ? { ...row, Status: newStatus } : row))
-    );
-    setEditingStatusId(null);
-  };
-
-  // Handle sorting
   const handleSort = (key) => {
     let direction = 'asc';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
@@ -51,19 +68,16 @@ const CustomerTable = () => {
     setSortConfig({ key, direction });
   };
 
-  // Handle view button click
   const handleView = (type, data) => {
     setPopupType(type);
     setPopupData(data);
   };
 
-  // Close popup
   const closePopup = () => {
     setPopupData(null);
     setPopupType(null);
   };
 
-  // Filter data based on search value
   const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
     return (
@@ -72,7 +86,6 @@ const CustomerTable = () => {
     );
   });
 
-  // Sort data based on sort configuration
   const sortedData = [...filteredData].sort((a, b) => {
     if (sortConfig) {
       const { key, direction } = sortConfig;
@@ -93,15 +106,14 @@ const CustomerTable = () => {
     return 0;
   });
 
-  // Get status style based on status value
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
       case 'picked':
-        return { backgroundColor: '#4CAF50' }; // Green for Picked
+        return { backgroundColor: '#4CAF50' };
       case 'cancelled':
-        return { backgroundColor: '#F44336' }; // Red for Cancelled
+        return { backgroundColor: '#F44336' };
       case 'arrived':
-        return { backgroundColor: '#4379F2' }; // Blue for Arrived
+        return { backgroundColor: '#4379F2' };
       default:
         return {};
     }
@@ -111,19 +123,21 @@ const CustomerTable = () => {
     <div className={style.App}>
       <main className={style.table} id="customers_table">
         <TableHeader searchValue={searchValue} handleSearch={handleSearch} />
-        <TableBody
-          data={sortedData}
-          handleSort={handleSort}
-          sortConfig={sortConfig}
-          handleStatusChange={handleStatusChange}
-          editingStatusId={editingStatusId}
-          setEditingStatusId={setEditingStatusId}
-          handleView={handleView}
-          getStatusStyle={getStatusStyle} // Pass getStatusStyle as a prop
-        />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p style={{ color: 'red' }}>{error}</p>
+        ) : (
+          <TableBody
+            data={sortedData}
+            handleSort={handleSort}
+            sortConfig={sortConfig}
+            handleView={handleView}
+            getStatusStyle={getStatusStyle}
+          />
+        )}
       </main>
 
-      {/* Popup for Orders and Tank */}
       {popupData && (
         <div className={style.popupOverlay}>
           <div className={style.popup}>
@@ -164,21 +178,23 @@ const TableHeader = ({ searchValue, handleSearch }) => (
   </section>
 );
 
+TableHeader.propTypes = {
+  searchValue: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+};
+
 const TableBody = ({
   data,
   handleSort,
   sortConfig,
-  handleStatusChange,
-  editingStatusId,
-  setEditingStatusId,
   handleView,
-  getStatusStyle, // Receive getStatusStyle as a prop
+  getStatusStyle,
 }) => (
   <section className={style.table__body}>
     <table>
       <thead>
         <tr>
-          {['Token', 'Customer', 'Order', 'Order Date', 'Status', 'Total', 'Tank', ' '].map((key) => (
+          {['Token', 'Customer', 'Order', 'Order Date', 'Status', 'Total', 'Tank'].map((key) => (
             <th
               key={key}
               onClick={() => handleSort(key)}
@@ -211,27 +227,10 @@ const TableBody = ({
               <div className={style.statusContainer}>
                 <p
                   className={`${style.status} ${style[row.Status.toLowerCase()]}`}
-                  style={getStatusStyle(row.Status)} // Use getStatusStyle here
-                  onClick={() => setEditingStatusId(row.id)}
+                  style={getStatusStyle(row.Status)}
                 >
                   {row.Status}
                 </p>
-                {editingStatusId === row.id && (
-                  <div className={style.statusOptions}>
-                    {['Picked', 'Cancelled', 'Arrived']
-                      .filter((status) => status.toLowerCase() !== row.Status.toLowerCase())
-                      .map((status) => (
-                        <p
-                          key={status}
-                          className={`${style.status} ${style[status.toLowerCase()]}`}
-                          style={getStatusStyle(status)} // Use getStatusStyle here
-                          onClick={() => handleStatusChange(row.id, status)}
-                        >
-                          {status}
-                        </p>
-                      ))}
-                  </div>
-                )}
               </div>
             </td>
             <td>{row.Total}</td>
@@ -240,19 +239,19 @@ const TableBody = ({
                 View
               </button>
             </td>
-            <td>
-              <img
-                src={edit}
-                alt="edit icon"
-                className={style.editIcon}
-                onClick={() => setEditingStatusId(row.id)}
-              />
-            </td>
           </tr>
         ))}
       </tbody>
     </table>
   </section>
 );
+
+TableBody.propTypes = {
+  data: PropTypes.array.isRequired,
+  handleSort: PropTypes.func.isRequired,
+  sortConfig: PropTypes.object,
+  handleView: PropTypes.func.isRequired,
+  getStatusStyle: PropTypes.func.isRequired,
+};
 
 export default CustomerTable;

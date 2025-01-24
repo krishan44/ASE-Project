@@ -30,7 +30,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-
+  
     try {
       const response = await fetch('http://localhost:5001/login', {
         method: 'POST',
@@ -42,21 +42,19 @@ const Login = () => {
           password: password,
         }),
       });
-
+  
       const result = await response.json();
-
+  
       if (response.ok) {
-        // Store user information in local storage
+        // Save user information to localStorage
         localStorage.setItem('user', JSON.stringify(result));
-
-        // Store the branch information in localStorage
-        if (result.branch) {
-          localStorage.setItem('userBranch', result.branch.outlet || result.branch.name); // Use 'outlet' for Customer/Business, 'name' for Outlet
-        }
-
+        localStorage.setItem('username', result.username);
+        localStorage.setItem('customerId', result.customerid);
+        localStorage.setItem('branch', JSON.stringify(result.branch));
+        console.log('User information saved to localStorage:', result);
         // Redirect based on the user's role
         switch (result.role) {
-          case 'Customer':
+          case 'customer':
             navigate('/customer/overview');
             break;
           case 'business':
@@ -81,7 +79,6 @@ const Login = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -166,7 +163,7 @@ const Login = () => {
 
               <Typography align="center" color="text.secondary">
                 Don't have an account?{' '}
-                <Link to="/" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
+                <Link to="/Registration" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
                   <Box sx={{ cursor: 'pointer' }}>Register</Box>
                 </Link>
               </Typography>
