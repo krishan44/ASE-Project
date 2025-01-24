@@ -6,7 +6,7 @@ import Overview from "./Components/OutletManager/Overview";
 import CustomerOrders from "./Components/OutletManager/customerOrders";
 import Customers from "./Components/OutletManager/customers";
 // import CustomerTable from "./Components/OutletManager/Tables/customerTable";
-import ManageAccounts from "./Components/OutletManager/manageAccount";
+import ManageStock from "./Components/OutletManager/manageStock";
 import OutletManager from "./Components/OutletManager/outletManager";
 import Login from './Components/Login/Login';
 import Registration from './Components/Login/Registration';
@@ -31,8 +31,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Registration />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Login />} />
         <Route path="/Registration" element={<Registration />} />
         <Route path="/Verify" element={<Verify />} />
         <Route path="/customer-dashboard" element={<Overview />} />
@@ -40,7 +39,7 @@ function App() {
         <Route path="/customers" element={<Customers />} />
 
         <Route path="/outlet-dashboard" element={<Overview />} />
-        <Route path="/manage_accounts" element={<ManageAccounts />} />
+        <Route path="/manage_accounts" element={<ManageStock />} />
         <Route path="/outlet_manager" element={<Overview />} />
         <Route path="/orders" element={<CustomerOrders />} />
         <Route path="/business_orders" element={<BusinessOrders />} />

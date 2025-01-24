@@ -59,11 +59,11 @@ const Login = () => {
           case 'Customer':
             navigate('/customer/overview');
             break;
-          case 'Business':
-            navigate('/business-dashboard');
+          case 'business':
+            navigate('/customer/overview');
             break;
           case 'Outlet':
-            navigate('/dashboard');
+            navigate('/outlet-dashboard');
             break;
           case 'Admin':
             navigate('/admin/dashboard');
