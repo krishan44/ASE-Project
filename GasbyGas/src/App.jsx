@@ -24,92 +24,11 @@ import AdminReports from './Components/Admin/AdminReport';
 import OrderHistory from './Components/Customer/OrderHistory';
 import CusOrders from './Components/Customer/cusOrders';
 import CusProfile from './Components/Customer/CustomerProfile';
+import OutletManage from './Components/Admin/OutletManagers';
+import AdminOutlet from './Components/Admin/Outlets';
 
 function App() {
   return (
-    // <ToastProvider>
-    //   <AuthProvider>
-    //     <Router>
-    //       <Routes>
-    //         {/* Public Routes */}
-    //         <Route path="/login/admin" element={<Login />} />
-
-    //         {/* Protected Routes */}
-    //         <Route
-    //           path="/dashboard"
-    //           element={
-    //             <PrivateRoute>
-    //               <Overview />
-    //             </PrivateRoute>
-    //           }
-    //         />
-    //         <Route
-    //           path="/orders"
-    //           element={
-    //             <PrivateRoute>
-    //               <CustomerOrders />
-    //             </PrivateRoute>
-    //           }
-    //         />
-    //         <Route
-    //           path="/customers"
-    //           element={
-    //             <PrivateRoute>
-    //               <Customers />
-    //             </PrivateRoute>
-    //           }
-    //         />
-    //         <Route
-    //           path="/manage_accounts"
-    //           element={
-    //             <PrivateRoute>
-    //               <ManageAccounts />
-    //             </PrivateRoute>
-    //           }
-    //         />
-    //         <Route
-    //           path="/outlet_manager"
-    //           element={
-    //             <PrivateRoute>
-    //               <OutletManager />
-    //             </PrivateRoute>
-    //           }
-    //         />
-    //         <Route path="/"
-    //           element={
-    //             <PrivateRoute>
-    //               <Overview />
-    //             </PrivateRoute>
-    //           }
-    //         />
-
-    //         <Route path="/orders"
-    //           element={
-    //             <PrivateRoute>
-    //               <CustomerOrders />
-    //             </PrivateRoute>} />
-
-    //         <Route path="/BusinessOrders"
-    //           element={
-    //             <PrivateRoute>
-    //               <BusinessOrders />
-    //             </PrivateRoute>} />
-
-    //         <Route path="/StockOrders"
-    //           element={<PrivateRoute><StockOrders
-    //           /></PrivateRoute>} />
-
-    //         <Route path="/Delete"
-    //           element={<PrivateRoute><Delete /></PrivateRoute>}
-    //         />
-
-    //         <Route path="/Waitlist Manage"
-    //           element={<PrivateRoute><Waitlist /></PrivateRoute>}
-    //         />
-    //       </Routes>
-    //     </Router>
-    //   </AuthProvider>
-    // </ToastProvider>
     <Router>
       <Routes>
         <Route path="/" element={<Registration />} />
@@ -133,11 +52,12 @@ function App() {
         <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
         <Route path="/admin/account_manage" element={<AccountManage />} />
         <Route path="/admin/reports" element={<AdminReports />} />
+        <Route path="/admin/outlet_manager" element={<OutletManage />} />
+        <Route path="/admin/outlet" element={<AdminOutlet />} />
 
         <Route path="/customer/overview" element={<CusOrders />} />
         <Route path="/customer/order_history" element={<OrderHistory />} />
         <Route path="/customer/profile" element={<CusProfile />} />
-        <Route path="/customer/gaz_order" element={<OrderGaz />} />
 
       </Routes>
     </Router>
