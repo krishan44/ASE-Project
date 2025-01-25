@@ -38,7 +38,7 @@ function App() {
         <Route path="/orders" element={<CustomerOrders />} />
         <Route path="/customers" element={<Customers />} />
 
-        <Route path="/outlet-dashboard" element={<Overview />} />
+        <Route path="/outlet-dashboard" element={<CustomerOrders />} />
         <Route path="/manage_accounts" element={<ManageStock />} />
         <Route path="/outlet_manager" element={<Overview />} />
         <Route path="/orders" element={<CustomerOrders />} />

@@ -50,8 +50,18 @@ const Login = () => {
         localStorage.setItem('user', JSON.stringify(result));
         localStorage.setItem('username', result.username);
         localStorage.setItem('customerId', result.customerid);
+  
+        // Save branch information to localStorage
         localStorage.setItem('branch', JSON.stringify(result.branch));
+        localStorage.setItem('userRole', result.role);
+        // Save business ID to localStorage if the user is a business
+        if (result.role === 'business' && result.branch && result.branch.businessid) {
+          localStorage.setItem('businessId', result.branch.businessid);
+          console.log('Business ID saved to localStorage:', result.branch.businessid);
+        }
+  
         console.log('User information saved to localStorage:', result);
+  
         // Redirect based on the user's role
         switch (result.role) {
           case 'customer':
@@ -60,7 +70,7 @@ const Login = () => {
           case 'business':
             navigate('/customer/overview');
             break;
-          case 'Outlet':
+          case 'outlet':
             navigate('/outlet-dashboard');
             break;
           case 'Admin':

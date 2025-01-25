@@ -14,31 +14,41 @@ const CustomerTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const customerid = localStorage.getItem('customerId'); // Use 'customerId' (uppercase I)
-      if (!customerid) {
-        console.error("Customer ID not found in localStorage");
-        setError('Customer ID not found. Please log in again.');
+      // Retrieve customerId and businessId from localStorage
+      const customerid = localStorage.getItem('customerId'); // For customers
+      const businessid = localStorage.getItem('businessId'); // For businesses
+  
+      // Debug logs to verify the values
+      console.log('Customer ID from localStorage:', customerid);
+      console.log('Business ID from localStorage:', businessid);
+  
+      // Check if either customerId or businessId exists
+      if (!customerid && !businessid) {
+        console.error("Customer ID or Business ID not found in localStorage");
+        setError('Customer ID or Business ID not found. Please log in again.');
         setIsLoading(false);
         return;
       }
-
-      console.log(`Fetching orders for customer ID: ${customerid}`);
-
+  
+      // Determine the endpoint based on the user's role
+      const endpoint = businessid ? `business-orders/${businessid}` : `customer-orders/${customerid}`;
+      console.log(`Fetching orders for ${businessid ? 'business' : 'customer'} ID: ${businessid || customerid}`);
+  
       try {
-        const response = await fetch(`http://localhost:5001/customer-orders/${customerid}`);
+        const response = await fetch(`http://localhost:5001/${endpoint}`);
         console.log("Response received:", response);
-
+  
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Failed to fetch data. Response status:", response.status, "Response text:", errorText);
           throw new Error(`Failed to fetch data: ${response.status} ${errorText}`);
         }
-
+  
         const data = await response.json();
         console.log("Data received:", data);
-
+  
         if (data.message) {
-          console.log("No orders found for this customer");
+          console.log("No orders found for this user");
           setTableData([]);
           setError(data.message);
         } else {
@@ -52,7 +62,7 @@ const CustomerTable = () => {
         setIsLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
 

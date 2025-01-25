@@ -23,10 +23,10 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
           </div>
         
         <div className={style.routes}>
-          <Link to="/outlet_manager" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
+          {/* <Link to="/outlet_manager" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
             <img src={dashboard} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Overview" ? style.selected : ""}`}>Overview</span>
-          </Link>
+          </Link> */}
           <Link to="/orders" className={style.optionContainer} onClick={() => setSelectedOption("Customer Orders")}>
             <img src={order} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Customer Orders" ? style.selected : ""}`}>Customer Orders</span>
