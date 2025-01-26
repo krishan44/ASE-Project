@@ -59,11 +59,40 @@ const Business = () => {
   };
 
   // Handle status change
-  const handleStatusChange = (id, newStatus) => {
-    setTableData((prevData) =>
-      prevData.map((row) => (row.id === id ? { ...row, Status: newStatus } : row))
-    );
-    setEditingStatusId(null);
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5001/business-orders/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: newStatus,
+          completeddate: newStatus.toLowerCase() === 'picked' ? new Date().toISOString() : null,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+  
+      // Update the local state if the API call is successful
+      setTableData((prevData) =>
+        prevData.map((row) =>
+          row.id === id
+            ? {
+                ...row,
+                Status: newStatus,
+                completeddate: newStatus.toLowerCase() === 'picked' ? new Date().toISOString() : row.completeddate,
+              }
+            : row
+        )
+      );
+      setEditingStatusId(null);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status. Please try again later.');
+    }
   };
 
   // Handle sorting
@@ -87,12 +116,14 @@ const Business = () => {
     setPopupType(null);
   };
 
-  // Filter data based on search value
+  // Filter data based on search value and include only Pending and Confirmed statuses
   const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
+    const includedStatuses = ['pending', 'confirmed','arrived','Confirmed']; // Only show these statuses
     return (
-      row.id.toString().toLowerCase().includes(normalizedSearch) ||
-      row.customer.toLowerCase().includes(normalizedSearch)
+      (row.id.toString().toLowerCase().includes(normalizedSearch) ||
+        row.customer.toLowerCase().includes(normalizedSearch)) &&
+      includedStatuses.includes(row.Status.toLowerCase()) // Include only rows with these statuses
     );
   });
 
@@ -120,12 +151,18 @@ const Business = () => {
   // Get status style based on status value
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
-      case 'picked':
-        return { backgroundColor: '#4CAF50' }; // Green for Picked
+      case 'completed':
+        return { backgroundColor: '#4CAF50' }; // Green for Completed
       case 'cancelled':
         return { backgroundColor: '#F44336' }; // Red for Cancelled
       case 'arrived':
         return { backgroundColor: '#4379F2' }; // Blue for Arrived
+      case 'confirmed':
+        return { backgroundColor: '#FFC107' }; // Yellow for Confirmed
+      case 'waiting':
+        return { backgroundColor: '#9E9E9E' }; // Gray for Waiting
+      case 'pending':
+        return { backgroundColor: '#FF9800' }; // Orange for Pending
       default:
         return {};
     }
@@ -242,8 +279,7 @@ const TableBody = ({
                 </p>
                 {editingStatusId === row.id && (
                   <div className={style.statusOptions}>
-                    {['Picked', 'Cancelled', 'Arrived']
-                      .filter((status) => status.toLowerCase() !== row.Status.toLowerCase())
+                    {['Completed', 'Cancelled', 'Arrived','Confirmed','Waiting'] // Allow changing to these statuses
                       .map((status) => (
                         <p
                           key={status}

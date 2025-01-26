@@ -90,7 +90,7 @@ const CustomerTable = () => {
 
   const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
-    const validStatuses = ['arrived', 'waiting', 'pending']; // Add the statuses you want to include
+    const validStatuses = ['arrived', 'waiting', 'pending','confirmed']; // Add the statuses you want to include
 
     return (
       (row.id.toString().toLowerCase().includes(normalizedSearch) ||

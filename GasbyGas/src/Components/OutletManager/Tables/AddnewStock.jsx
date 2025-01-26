@@ -3,24 +3,77 @@ import { Box, Typography, Stack, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-
-const branchName = localStorage.getItem('branch');
+function AddNewStock() {
+  // Retrieve branch name from localStorage
+  const branchName = localStorage.getItem('branch');
   console.log('Branch Name:', branchName);
 
-
-function AddNewStock() {
   // State for Order and Tank Status quantities
   const [orderQuantities, setOrderQuantities] = useState({
     small: '', // For 2.5Kg
     medium: '', // For 5Kg
     large: '', // For 12.5Kg
+    extraLarge: '', // For 37.5Kg
   });
 
-  const [tankQuantities, setTankQuantities] = useState({
-    small: '',
-    medium: '',
-    large: '',
-  });
+  // State for order date
+  const [orderDate, setOrderDate] = useState('');
+
+  const handleSave = async () => {
+    try {
+      // Validate the order date
+      if (!orderDate) {
+        alert('Please select an order date.');
+        return;
+      }
+
+      // Prepare the order data
+      const orderData = {
+        outname: branchName, // Use the branch name from localStorage
+        twoandhalfkg: orderQuantities.small || 0, // 2.5Kg
+        fivekg: orderQuantities.medium || 0, // 5Kg
+        twelevekg: orderQuantities.large || 0, // 12.5Kg
+        thirtysevenkg: orderQuantities.extraLarge || 0, // 37.5Kg
+        total: calculateTotal(orderQuantities), // Calculate the total
+        status: 'Pending', // Default status
+        orderedon: orderDate, // Use the selected order date
+      };
+
+      // Send the order data to the backend
+      const response = await fetch('http://localhost:5001/outlet-orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save order');
+      }
+
+      // Reset the form after successful save
+      setOrderQuantities({ small: '', medium: '', large: '', extraLarge: '' });
+      setOrderDate(''); // Reset the order date
+      alert('Order saved successfully!');
+    } catch (error) {
+      console.error('Error saving order:', error);
+      alert('Failed to save order. Please try again later.');
+    }
+  };
+
+  // Helper function to calculate the total
+  const calculateTotal = (quantities) => {
+    const prices = {
+      small: 500, // Price for 2.5Kg
+      medium: 1000, // Price for 5Kg
+      large: 2000, // Price for 12.5Kg
+      extraLarge: 5000, // Price for 37.5Kg
+    };
+    return Object.keys(quantities).reduce((total, key) => {
+      return total + (quantities[key] || 0) * prices[key];
+    }, 0);
+  };
 
   // Increment/Decrement handlers
   const handleIncrement = (stateUpdater, key) => {
@@ -41,8 +94,7 @@ function AddNewStock() {
     <Box
       sx={{
         width: '400px',
-        height: '600px',
-       
+        height: '650px', // Increased height to accommodate new option
         padding: '14px 14px',
         borderRadius: '10px',
       }}
@@ -58,21 +110,20 @@ function AddNewStock() {
         Add New Order
       </Typography>
       <Stack>
-        <Box sx={{ marginTop: '20px' }}>
-          <Typography sx={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Poppins' }}>
-            Order ID : 1221
-          </Typography>
-        </Box>
-
         <Box>
           <Typography sx={{ fontSize: '14px', fontWeight: '400', fontFamily: 'Poppins', marginTop: '5px' }}>
             Order
           </Typography>
-          <Box sx={{ display: 'flex', gap: '5px' }}>
-            {['small', 'medium', 'large'].map((key, index) => (
+          <Box sx={{ display: 'flex', gap: '5px', flexWrap: 'wrap' }}>
+            {[
+              { key: 'small', label: '2.5Kg' },
+              { key: 'medium', label: '5Kg' },
+              { key: 'large', label: '12.5Kg' },
+              { key: 'extraLarge', label: '37.5Kg' }
+            ].map(({ key, label }, index) => (
               <Box
                 key={index}
-                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '5px 0' }}
               >
                 <RemoveIcon
                   onClick={() => handleDecrement(setOrderQuantities, key)}
@@ -80,13 +131,7 @@ function AddNewStock() {
                 />
                 <TextField
                   variant="outlined"
-                  placeholder={
-                    key === 'small'
-                      ? '2.5Kg'
-                      : key === 'medium'
-                      ? '5Kg'
-                      : '12.5Kg'
-                  }
+                  placeholder={label}
                   value={orderQuantities[key]}
                   sx={{
                     '& .MuiInputBase-root': {
@@ -115,6 +160,8 @@ function AddNewStock() {
           </Typography>
           <TextField
             type="date"
+            value={orderDate} // Bind the value to the state
+            onChange={(e) => setOrderDate(e.target.value)} // Update the state on change
             InputLabelProps={{
               shrink: true,
             }}
@@ -140,14 +187,9 @@ function AddNewStock() {
             }}
           />
         </Box>
-
-        
-        
       </Stack>
 
       <Box sx={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-        
-
         <Typography
           sx={{
             width: '100px',
@@ -167,6 +209,7 @@ function AddNewStock() {
               border: '1px solid #344CB7',
             },
           }}
+          onClick={handleSave} 
         >
           Save
         </Typography>

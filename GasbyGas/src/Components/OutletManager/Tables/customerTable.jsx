@@ -58,12 +58,34 @@ const CustomerTable = () => {
     setSearchValue(e.target.value);
   };
 
-  // Handle status change
-  const handleStatusChange = (id, newStatus) => {
-    setTableData((prevData) =>
-      prevData.map((row) => (row.id === id ? { ...row, Status: newStatus } : row))
-    );
-    setEditingStatusId(null);
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5001/customer-orders/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: newStatus,
+          completeddate: newStatus.toLowerCase() === 'completed' ? new Date().toISOString() : null,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+  
+      // Update the local state if the API call is successful
+      setTableData((prevData) =>
+        prevData.map((row) =>
+          row.id === id ? { ...row, Status: newStatus, completeddate: newStatus.toLowerCase() === 'completed' ? new Date().toISOString() : row.completeddate } : row
+        )
+      );
+      setEditingStatusId(null);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status. Please try again later.');
+    }
   };
 
   // Handle sorting
@@ -250,7 +272,7 @@ const TableBody = ({
                 </p>
                 {editingStatusId === row.id && (
                   <div className={style.statusOptions}>
-                    {['Cancelled', 'Completed', 'Pending', 'Confirmed', 'Waiting'] // Include all statuses in the dropdown
+                    {['Completed', 'Cancelled', 'Arrived','Confirmed','Waiting'] // Include all statuses in the dropdown
                       .filter((status) => status.toLowerCase() !== row.Status.toLowerCase()) // Exclude the current status
                       .map((status) => (
                         <p

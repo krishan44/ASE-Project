@@ -55,9 +55,7 @@ function CusOrders() {
                             <button className={style.addBtn} onClick={handleAddClick}>
                                 Place Order
                             </button>
-                            <button className={style.UpdateBtn} onClick={handleSaveClick}>
-                                Update
-                            </button>
+                            
                         </div>
                         {/* <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button> */}
                     </div>

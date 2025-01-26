@@ -63,17 +63,7 @@ function BusinessOrders() {
                         <h2>Business Orders</h2>
                     </div>
                     <hr />
-                    <div className={style.btns}>
-                        <div>
-                            <button className={style.addBtn} onClick={handleAddClick}>
-                                Add
-                            </button>
-                            <button className={style.UpdateBtn} onClick={handleSaveClick}>
-                                Save
-                            </button>
-                        </div>
-                        <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button>
-                    </div>
+                    
                     <div className={style.table}>
                         {/* Show loading or error message while fetching the branch */}
                         {isLoading ? (

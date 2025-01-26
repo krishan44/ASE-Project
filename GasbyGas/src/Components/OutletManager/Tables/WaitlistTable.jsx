@@ -10,10 +10,10 @@ const WaitlistTable = () => {
   const [popupType, setPopupType] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeStatusRowId, setActiveStatusRowId] = useState(null);
 
   // Retrieve branch name from localStorage
   const branchName = localStorage.getItem('branch');
-  console.log('Branch Name:', branchName);
 
   // Fetch waitlist orders based on the logged-in outlet's branch
   useEffect(() => {
@@ -41,7 +41,7 @@ const WaitlistTable = () => {
     };
 
     fetchWaitlistOrders();
-  }, [branchName]); // Re-fetch data if branch changes
+  }, [branchName]);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -75,6 +75,54 @@ const WaitlistTable = () => {
   const closePopup = () => {
     setPopupData(null);
     setPopupType(null);
+  };
+
+  // Handle status change
+  const handleStatusChange = async (rowId, newStatus) => {
+    try {
+      // Find the row in the table data
+      const row = tableData.find((row) => row.id === rowId);
+      if (!row) {
+        throw new Error('Order not found');
+      }
+  
+      // Determine if the order is a customer order or business order
+      const isCustomerOrder = row.type === 'customer'; // Use the 'type' field to determine the order type
+      const endpoint = isCustomerOrder
+        ? `http://localhost:5001/customer-orders/${rowId}` // Endpoint for customer orders
+        : `http://localhost:5001/business-orders/${rowId}`; // Endpoint for business orders
+  
+      // Make the API call to update the status
+      const response = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+  
+      // Update the local state if the API call is successful
+      const updatedData = tableData.map((row) =>
+        row.id === rowId ? { ...row, Status: newStatus } : row
+      );
+      setTableData(updatedData);
+      setActiveStatusRowId(null);
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Failed to update status. Please try again later.');
+    }
+  };
+
+  
+  // Toggle status options
+  const toggleStatusOptions = (rowId) => {
+    setActiveStatusRowId(activeStatusRowId === rowId ? null : rowId);
   };
 
   // Filter data based on search value
@@ -116,6 +164,9 @@ const WaitlistTable = () => {
           handleSort={handleSort}
           sortConfig={sortConfig}
           handleView={handleView}
+          handleStatusChange={handleStatusChange}
+          toggleStatusOptions={toggleStatusOptions}
+          activeStatusRowId={activeStatusRowId}
         />
       </main>
 
@@ -145,7 +196,7 @@ const WaitlistTable = () => {
   );
 };
 
-// TableHeader Component
+// TableHeader Component (unchanged)
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -181,6 +232,9 @@ const TableBody = ({
   handleSort,
   sortConfig,
   handleView,
+  handleStatusChange,
+  toggleStatusOptions,
+  activeStatusRowId
 }) => (
   <section className={style.table__body}>
     <table>
@@ -219,9 +273,23 @@ const TableBody = ({
               <div className={style.statusContainer}>
                 <p
                   className={`${style.status} ${getStatusClass(row.Status)}`}
+                  onClick={() => toggleStatusOptions(row.id)}
                 >
                   {row.Status}
                 </p>
+                {activeStatusRowId === row.id && (
+                  <div className={style.statusOptions}>
+                    {['Completed', 'Cancelled', 'Arrived', 'Confirmed'].map((status) => (
+                      <p
+                        key={status}
+                        className={`${style.status} ${getStatusClass(status)}`}
+                        onClick={() => handleStatusChange(row.id, status)}
+                      >
+                        {status}
+                      </p>
+                    ))}
+                  </div>
+                )}
               </div>
             </td>
             <td>{row.Total}</td>
