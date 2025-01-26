@@ -6,59 +6,88 @@ import styles from './ProfileForm.module.css';
 
 // Zod validation schema
 const profileSchema = z.object({
-    firstName: z.string().min(2, { message: "First name must be at least 2 characters" }),
-    lastName: z.string().min(2, { message: "Last name must be at least 2 characters" }),
+    name: z.string().min(2, { message: "Name must be at least 2 characters" }),
     email: z.string().email({ message: "Invalid email address" }),
-    phone: z.string()
+    contactNumber: z.string()
         .regex(/^\+?[\d\s-]{10,14}$/, { message: "Invalid phone number" })
         .optional(),
     address: z.string().min(6, { message: "Address must be at least 6 characters" }),
 });
 
 function ProfileForm() {
-    // const CustomerProfileForm = () => {
     const [isLoading, setIsLoading] = useState(false);
+    const [userRole, setUserRole] = useState('');
+    const [userId, setUserId] = useState('');
 
     const form = useForm({
         resolver: zodResolver(profileSchema),
         defaultValues: {
-            firstName: '',
-            lastName: '',
+            name: '',
             email: '',
-            phone: '',
+            contactNumber: '',
             address: ''
-
         }
     });
 
+    // Fetch the logged-in user's profile data
     useEffect(() => {
-        const fetchCustomerProfile = async () => {
+        const fetchUserProfile = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch('/api/customer/profile');
-                const data = await response.json();
 
-                form.reset({
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    email: data.email,
-                    phone: data.phone || '',
-                    address: data.address || ''
+                // Retrieve the logged-in user's ID, role, and business/customer ID from localStorage
+                const userId = localStorage.getItem('userid');
+                const userRole = localStorage.getItem('userRole');
+                const businessId = localStorage.getItem('businessId');
+                const customerId = localStorage.getItem('customerId');
+
+                if (!userId || !userRole) {
+                    throw new Error('User ID or role not found');
+                }
+
+                setUserRole(userRole);
+                setUserId(userRole === 'business' ? businessId : customerId);
+
+                // Fetch the user's profile data from the backend
+                const response = await fetch(`http://localhost:5001/profile/${userRole}/${userRole === 'business' ? businessId : customerId}`, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 });
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch profile');
+                }
+
+                const data = await response.json();
+                form.reset(data);
             } catch (error) {
-                alert('Failed to fetch profile');
+                alert(error.message || 'Failed to fetch profile');
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchCustomerProfile();
+        fetchUserProfile();
     }, [form]);
 
+    // Handle form submission
     const onSubmit = async (formData) => {
         try {
             setIsLoading(true);
-            const response = await fetch('/api/customer/profile', {
+
+            // Retrieve the logged-in user's ID, role, and business/customer ID from localStorage
+            const userId = localStorage.getItem('userid');
+            const userRole = localStorage.getItem('userRole');
+            const businessId = localStorage.getItem('businessId');
+            const customerId = localStorage.getItem('customerId');
+
+            if (!userId || !userRole) {
+                throw new Error('User ID or role not found');
+            }
+
+            // Send the updated profile data to the backend
+            const response = await fetch(`http://localhost:5001/profile/${userRole}/${userRole === 'business' ? businessId : customerId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -70,7 +99,7 @@ function ProfileForm() {
                 throw new Error('Update failed');
             }
         } catch (error) {
-            alert('Could not update profile');
+            alert(error.message || 'Could not update profile');
         } finally {
             setIsLoading(false);
         }
@@ -81,36 +110,19 @@ function ProfileForm() {
             onSubmit={form.handleSubmit(onSubmit)}
             className={styles.profileForm}
         >
-            <div className={styles.nameGroup}>
-                <div className={styles.formGroup}>
-                    <label htmlFor="firstName" className={styles.label}>First Name</label>
-                    <input
-                        id="firstName"
-                        {...form.register('firstName')}
-                        className={styles.input}
-                        disabled={isLoading}
-                    />
-                    {form.formState.errors.firstName && (
-                        <span className={styles.error}>
-                            {form.formState.errors.firstName.message}
-                        </span>
-                    )}
-                </div>
-
-                <div className={styles.formGroup}>
-                    <label htmlFor="lastName" className={styles.label}>Last Name</label>
-                    <input
-                        id="lastName"
-                        {...form.register('lastName')}
-                        className={styles.input}
-                        disabled={isLoading}
-                    />
-                    {form.formState.errors.lastName && (
-                        <span className={styles.error}>
-                            {form.formState.errors.lastName.message}
-                        </span>
-                    )}
-                </div>
+            <div className={styles.formGroup}>
+                <label htmlFor="name" className={styles.label}>Name</label>
+                <input
+                    id="name"
+                    {...form.register('name')}
+                    className={styles.input}
+                    disabled={isLoading}
+                />
+                {form.formState.errors.name && (
+                    <span className={styles.error}>
+                        {form.formState.errors.name.message}
+                    </span>
+                )}
             </div>
 
             <div className={styles.formGroup}>
@@ -130,17 +142,17 @@ function ProfileForm() {
             </div>
 
             <div className={styles.formGroup}>
-                <label htmlFor="phone" className={styles.label}>Phone</label>
+                <label htmlFor="contactNumber" className={styles.label}>Phone</label>
                 <input
-                    id="phone"
+                    id="contactNumber"
                     type="tel"
-                    {...form.register('phone')}
+                    {...form.register('contactNumber')}
                     className={styles.input}
                     disabled={isLoading}
                 />
-                {form.formState.errors.phone && (
+                {form.formState.errors.contactNumber && (
                     <span className={styles.error}>
-                        {form.formState.errors.phone.message}
+                        {form.formState.errors.contactNumber.message}
                     </span>
                 )}
             </div>
@@ -149,7 +161,7 @@ function ProfileForm() {
                 <label htmlFor="address" className={styles.label}>Address</label>
                 <input
                     id="address"
-                    type="tel"
+                    type="text"
                     {...form.register('address')}
                     className={styles.input}
                     disabled={isLoading}
@@ -170,6 +182,6 @@ function ProfileForm() {
             </button>
         </form>
     );
-    // };
 }
+
 export default ProfileForm;

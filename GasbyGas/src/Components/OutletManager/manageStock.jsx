@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import style from "./manageStock.module.css";
 import MainDashboard from "./MainDashboard";
-import { Package, RefreshCcw } from "lucide-react";
+import { Package, RefreshCcw, Loader2 } from "lucide-react";
 
-function StockManagement() {
+const StockManagement = () => {
   const [selectedOption, setSelectedOption] = useState("Stock Management");
   const [stockLevels, setStockLevels] = useState({
     "2.5Kg": 0,
@@ -12,20 +12,37 @@ function StockManagement() {
     "37.5Kg": 0,
   });
   const [lastUpdated, setLastUpdated] = useState(null);
-  const [loggedInUserBranch, setLoggedInUserBranch] = useState(null); // State for the logged-in user's branch
-  const [isLoading, setIsLoading] = useState(false); // Loading state for the update button
-  const [error, setError] = useState(null); // Error state
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch the logged-in user's branch from localStorage when the component mounts
+  const branchName = localStorage.getItem('branch');
+
   useEffect(() => {
-    const branch = localStorage.getItem("userBranch");
-    if (branch) {
-      setLoggedInUserBranch(branch);
-      setError(null);
-    } else {
-      setError("Branch information not found. Please log in again.");
+    if (!branchName) {
+      setError('Branch information not found in localStorage.');
+      return;
     }
-  }, []);
+
+    const fetchStockLevels = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`http://localhost:5001/stock-levels/${branchName}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch stock levels');
+        }
+        const data = await response.json();
+        setStockLevels(data);
+        setError(null);
+      } catch (error) {
+        console.error('Error fetching stock levels:', error);
+        setError('Failed to fetch stock levels. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    fetchStockLevels();
+  }, [branchName]);
 
   const handleStockChange = (weight, value) => {
     setStockLevels((prev) => ({
@@ -35,34 +52,30 @@ function StockManagement() {
   };
 
   const handleUpdateStock = async () => {
-    if (!loggedInUserBranch) {
+    if (!branchName) {
       alert("Branch information is missing. Please log in again.");
       return;
     }
 
-    setIsLoading(true); // Set loading state to true
-    setError(null); // Clear any previous errors
+    setIsLoading(true);
+    setError(null);
 
     try {
-      const response = await fetch(
-        `http://localhost:5001/update-stock/${loggedInUserBranch}`, // Use the full backend URL
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json", // Ensure the correct content type
-          },
-          body: JSON.stringify({ stockLevels }), // Send the stock levels as JSON
-        }
-      );
+      const response = await fetch(`http://localhost:5001/update-stock/${branchName}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ stockLevels }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      const result = await response.json(); // Parse the JSON response
+      const result = await response.json();
       console.log("Response from backend:", result);
 
-      // Reset the stock levels to 0 after successful update
       setStockLevels({
         "2.5Kg": 0,
         "5Kg": 0,
@@ -76,7 +89,7 @@ function StockManagement() {
       console.error("Error updating stock:", error);
       setError("Failed to update stock. Please try again.");
     } finally {
-      setIsLoading(false); // Reset loading state
+      setIsLoading(false);
     }
   };
 
@@ -94,11 +107,13 @@ function StockManagement() {
           <hr />
         </div>
 
-        {/* Show error message if branch is not found */}
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        {error && (
+          <div className={style.errorMessage}>
+            {error}
+          </div>
+        )}
 
-        {/* Stock management form */}
-        <div className={style.stockManagement}>
+        <div className={`${style.stockManagement} ${isLoading ? style.loadingState : ''}`}>
           {Object.keys(stockLevels).map((weight) => (
             <div key={weight} className={style.stockInputGroup}>
               <div className={style.stockLabelContainer}>
@@ -112,13 +127,13 @@ function StockManagement() {
                   value={stockLevels[weight]}
                   onChange={(e) => handleStockChange(weight, e.target.value)}
                   className={style.stockInput}
+                  disabled={isLoading}
                 />
                 <span className={style.stockUnit}>Units</span>
               </div>
             </div>
           ))}
 
-          {/* Update button and last updated timestamp */}
           <div className={style.stockUpdateContainer}>
             {lastUpdated && (
               <div className={style.lastUpdatedText}>
@@ -128,10 +143,13 @@ function StockManagement() {
             <button
               onClick={handleUpdateStock}
               className={style.updateStockButton}
-              disabled={isLoading} // Disable button while loading
+              disabled={isLoading}
             >
               {isLoading ? (
-                "Updating..."
+                <>
+                  <Loader2 className={`${style.updateIcon} ${style.spinIcon}`} />
+                  Updating...
+                </>
               ) : (
                 <>
                   <RefreshCcw className={style.updateIcon} />
@@ -140,10 +158,16 @@ function StockManagement() {
               )}
             </button>
           </div>
+
+          {isLoading && (
+            <div className={style.loadingOverlay}>
+              <Loader2 className={style.spinIcon} />
+            </div>
+          )}
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default StockManagement;

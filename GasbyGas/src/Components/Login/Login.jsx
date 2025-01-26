@@ -8,7 +8,7 @@ import {
   Container,
   Checkbox,
   FormControlLabel,
-  Paper
+  Paper,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -24,13 +24,16 @@ const theme = createTheme({
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+    setError('');
+
     try {
       const response = await fetch('http://localhost:5001/login', {
         method: 'POST',
@@ -42,26 +45,38 @@ const Login = () => {
           password: password,
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (response.ok) {
         // Save user information to localStorage
         localStorage.setItem('user', JSON.stringify(result));
         localStorage.setItem('username', result.username);
-        localStorage.setItem('customerId', result.customerid);
-  
-        // Save branch information to localStorage
-        localStorage.setItem('branch', JSON.stringify(result.branch));
+        localStorage.setItem('userid', result.userid);
         localStorage.setItem('userRole', result.role);
-        // Save business ID to localStorage if the user is a business
-        if (result.role === 'business' && result.branch && result.branch.businessid) {
-          localStorage.setItem('businessId', result.branch.businessid);
-          console.log('Business ID saved to localStorage:', result.branch.businessid);
+        localStorage.setItem('branch',result.branch.name);
+        // Clear previous role-specific data from localStorage
+        localStorage.removeItem('customerId');
+        localStorage.removeItem('businessId');
+        
+
+        // Save role-specific data to localStorage
+        if (result.role === 'customer') {
+          localStorage.setItem('customerId', result.customerid);
+          console.log('Customer ID saved to localStorage:', result.customerid);
+        } else if (result.role === 'business') {
+          localStorage.setItem('businessId', result.businessid);
+          console.log('Business ID saved to localStorage:', result.businessid);
+
+          // Save branch information if available
+          if (result.branch) {
+            localStorage.setItem('branch', JSON.stringify(result.branch));
+            console.log('Branch information saved to localStorage:', result.branch);
+          }
         }
-  
+
         console.log('User information saved to localStorage:', result);
-  
+
         // Redirect based on the user's role
         switch (result.role) {
           case 'customer':
@@ -80,15 +95,16 @@ const Login = () => {
             alert('Unknown role');
         }
       } else {
-        alert(`Error: ${result.error}`);
+        setError(result.error || 'Login failed. Please try again.');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred during login.');
+      setError('An error occurred during login.');
     } finally {
       setIsLoading(false);
     }
   };
+
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -145,10 +161,16 @@ const Login = () => {
 
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <FormControlLabel
-                  control={<Checkbox color="primary" />}
+                  control={<Checkbox color="primary" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} />}
                   label="Remember me"
                 />
               </Box>
+
+              {error && (
+                <Typography color="error" align="center" sx={{ mt: 2 }}>
+                  {error}
+                </Typography>
+              )}
 
               <Button
                 type="submit"
@@ -160,6 +182,7 @@ const Login = () => {
                   mb: 2,
                   background: 'linear-gradient(45deg, #2196f3 30%, #1976d2 90%)',
                 }}
+                aria-label={isLoading ? 'Logging in...' : 'Login'}
               >
                 {isLoading ? (
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -171,10 +194,10 @@ const Login = () => {
                 )}
               </Button>
 
-              <Typography align="center" color="text.secondary">
+              <Typography component="div" align="center" color="text.secondary">
                 Don't have an account?{' '}
                 <Link to="/Registration" style={{ textDecoration: 'none', color: '#1976d2', fontWeight: 'bold' }}>
-                  <Box sx={{ cursor: 'pointer' }}>Register</Box>
+                  Register
                 </Link>
               </Typography>
             </Box>

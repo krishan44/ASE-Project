@@ -17,11 +17,11 @@ const CustomerTable = () => {
       // Retrieve customerId and businessId from localStorage
       const customerid = localStorage.getItem('customerId'); // For customers
       const businessid = localStorage.getItem('businessId'); // For businesses
-  
+
       // Debug logs to verify the values
       console.log('Customer ID from localStorage:', customerid);
       console.log('Business ID from localStorage:', businessid);
-  
+
       // Check if either customerId or businessId exists
       if (!customerid && !businessid) {
         console.error("Customer ID or Business ID not found in localStorage");
@@ -29,24 +29,24 @@ const CustomerTable = () => {
         setIsLoading(false);
         return;
       }
-  
+
       // Determine the endpoint based on the user's role
       const endpoint = businessid ? `business-orders/${businessid}` : `customer-orders/${customerid}`;
       console.log(`Fetching orders for ${businessid ? 'business' : 'customer'} ID: ${businessid || customerid}`);
-  
+
       try {
         const response = await fetch(`http://localhost:5001/${endpoint}`);
         console.log("Response received:", response);
-  
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error("Failed to fetch data. Response status:", response.status, "Response text:", errorText);
           throw new Error(`Failed to fetch data: ${response.status} ${errorText}`);
         }
-  
+
         const data = await response.json();
         console.log("Data received:", data);
-  
+
         if (data.message) {
           console.log("No orders found for this user");
           setTableData([]);
@@ -62,7 +62,7 @@ const CustomerTable = () => {
         setIsLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
 
@@ -90,9 +90,12 @@ const CustomerTable = () => {
 
   const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
+    const validStatuses = ['arrived', 'waiting', 'pending']; // Add the statuses you want to include
+
     return (
-      row.id.toString().toLowerCase().includes(normalizedSearch) ||
-      row.customer.toLowerCase().includes(normalizedSearch)
+      (row.id.toString().toLowerCase().includes(normalizedSearch) ||
+        row.customer.toLowerCase().includes(normalizedSearch)) &&
+      validStatuses.includes(row.Status.toLowerCase()) // Filter by status
     );
   });
 

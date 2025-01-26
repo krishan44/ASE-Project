@@ -3,6 +3,11 @@ import { Box, Typography, Stack, TextField } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
+
+const branchName = localStorage.getItem('branch');
+  console.log('Branch Name:', branchName);
+
+
 function AddNewStock() {
   // State for Order and Tank Status quantities
   const [orderQuantities, setOrderQuantities] = useState({

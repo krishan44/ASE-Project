@@ -2,38 +2,54 @@ import React, { useState, useEffect } from 'react';
 import style from './StockTable.module.css';
 import search from '../../../assets/table/search.svg';
 
-const StockTable = ({ branch }) => {
+const StockTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
   const [popupData, setPopupData] = useState(null);
   const [popupType, setPopupType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Debugging: Log the branch prop
-  console.log("Received branch prop in StockTable:", branch);
+  // Retrieve branch name from localStorage
+  const branchName = localStorage.getItem('branch');
+  console.log('Branch Name:', branchName);
 
   // Fetch outlet orders based on the logged-in outlet's branch
   useEffect(() => {
+    if (!branchName) {
+      setError('Branch information not found in localStorage.');
+      setIsLoading(false);
+      return;
+    }
+
     const fetchOutletOrders = async () => {
       try {
-        if (!branch) {
-          console.error("Branch is null or undefined");
-          return;
-        }
-
-        const response = await fetch(`http://localhost:5001/outlet-orders/${branch}`);
+        const response = await fetch(`http://localhost:5001/outlet-orders/${branchName}`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Failed to fetch data');
         }
         const data = await response.json();
         setTableData(data);
+        setError(null);
       } catch (error) {
         console.error('Error fetching outlet orders:', error);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchOutletOrders();
-  }, [branch]);
+  }, [branchName]); // Re-fetch data if branch changes
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
 
   // Handle search input
   const handleSearch = (e) => {
@@ -172,7 +188,7 @@ const TableBody = ({
     <table>
       <thead>
         <tr>
-          {['Order ID', 'Customer', 'Order', 'Order Date', 'Status', 'Total'].map((key) => (
+          {['Order ID', 'Order', 'Order Date', 'Status', 'Total'].map((key) => (
             <th
               key={key}
               onClick={() => handleSort(key)}
@@ -194,7 +210,7 @@ const TableBody = ({
             style={{ backgroundColor: index % 2 === 0 ? 'transparent' : '#0000000b' }}
           >
             <td>{row.id}</td>
-            <td>{row.customer}</td>
+          
             <td>
               <button className={style.viewBtn} onClick={() => handleView('Orders', row.order)}>
                 View

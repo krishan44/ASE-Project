@@ -2,38 +2,54 @@ import React, { useState, useEffect } from 'react';
 import style from './WaitTable.module.css';
 import search from '../../../assets/table/search.svg';
 
-const WaitlistTable = ({ branch }) => {
+const WaitlistTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
   const [popupData, setPopupData] = useState(null);
   const [popupType, setPopupType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Debugging: Log the branch prop
-  console.log("Received branch prop in WaitlistTable:", branch);
+  // Retrieve branch name from localStorage
+  const branchName = localStorage.getItem('branch');
+  console.log('Branch Name:', branchName);
 
   // Fetch waitlist orders based on the logged-in outlet's branch
   useEffect(() => {
+    if (!branchName) {
+      setError('Branch information not found in localStorage.');
+      setIsLoading(false);
+      return;
+    }
+
     const fetchWaitlistOrders = async () => {
       try {
-        if (!branch) {
-          console.error("Branch is null or undefined");
-          return;
-        }
-
-        const response = await fetch(`http://localhost:5001/waitlist-orders/${branch}`);
+        const response = await fetch(`http://localhost:5001/waitlist-orders/${branchName}`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Failed to fetch data');
         }
         const data = await response.json();
         setTableData(data);
+        setError(null);
       } catch (error) {
         console.error('Error fetching waitlist orders:', error);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchWaitlistOrders();
-  }, [branch]);
+  }, [branchName]); // Re-fetch data if branch changes
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
 
   // Handle search input
   const handleSearch = (e) => {

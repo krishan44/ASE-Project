@@ -3,31 +3,55 @@ import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
-const Business = ({ branch }) => {
+const Business = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
   const [editingStatusId, setEditingStatusId] = useState(null);
   const [popupData, setPopupData] = useState(null);
   const [popupType, setPopupType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Retrieve branch name from localStorage
+  const branchName = localStorage.getItem('branch');
+  console.log('Branch Name:', branchName);
 
   // Fetch business orders for the specific branch
   useEffect(() => {
+    if (!branchName) {
+      setError('Branch information not found in localStorage.');
+      setIsLoading(false);
+      return;
+    }
+
     const fetchBusinessOrders = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/business-orders/${branch}`);
+        const response = await fetch(`http://localhost:5001/business-orders/${branchName}`);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Failed to fetch data');
         }
         const data = await response.json();
         setTableData(data);
+        setError(null);
       } catch (error) {
         console.error('Error fetching business orders:', error);
+        setError('Failed to fetch data. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchBusinessOrders();
-  }, [branch]);
+  }, [branchName]); // Re-fetch data if branch changes
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p style={{ color: 'red' }}>{error}</p>;
+  }
 
   // Handle search input
   const handleSearch = (e) => {
@@ -93,6 +117,20 @@ const Business = ({ branch }) => {
     return 0;
   });
 
+  // Get status style based on status value
+  const getStatusStyle = (status) => {
+    switch (status.toLowerCase()) {
+      case 'picked':
+        return { backgroundColor: '#4CAF50' }; // Green for Picked
+      case 'cancelled':
+        return { backgroundColor: '#F44336' }; // Red for Cancelled
+      case 'arrived':
+        return { backgroundColor: '#4379F2' }; // Blue for Arrived
+      default:
+        return {};
+    }
+  };
+
   return (
     <div className={style.App}>
       <main className={style.table} id="customers_table">
@@ -105,6 +143,7 @@ const Business = ({ branch }) => {
           editingStatusId={editingStatusId}
           setEditingStatusId={setEditingStatusId}
           handleView={handleView}
+          getStatusStyle={getStatusStyle} // Pass getStatusStyle as a prop
         />
       </main>
 
@@ -134,19 +173,6 @@ const Business = ({ branch }) => {
   );
 };
 
-const getStatusStyle = (status) => {
-  switch (status.toLowerCase()) {
-    case 'picked':
-      return { backgroundColor: '#4CAF50' }; // Green for Picked
-    case 'cancelled':
-      return { backgroundColor: '#F44336' }; // Red for Cancelled
-    case 'arrived':
-      return { backgroundColor: '#4379F2' }; // Blue for Arrived
-    default:
-      return {};
-  }
-};
-
 const TableHeader = ({ searchValue, handleSearch }) => (
   <section className={style.table__header}>
     <div className={style.inputGroup}>
@@ -170,6 +196,7 @@ const TableBody = ({
   editingStatusId,
   setEditingStatusId,
   handleView,
+  getStatusStyle, // Receive getStatusStyle as a prop
 }) => (
   <section className={style.table__body}>
     <table>
@@ -208,7 +235,7 @@ const TableBody = ({
               <div className={style.statusContainer}>
                 <p
                   className={`${style.status} ${style[row.Status.toLowerCase()]}`}
-                  style={getStatusStyle(row.Status)}
+                  style={getStatusStyle(row.Status)} // Use getStatusStyle here
                   onClick={() => setEditingStatusId(row.id)}
                 >
                   {row.Status}
@@ -221,7 +248,7 @@ const TableBody = ({
                         <p
                           key={status}
                           className={`${style.status} ${style[status.toLowerCase()]}`}
-                          style={getStatusStyle(status)}
+                          style={getStatusStyle(status)} // Use getStatusStyle here
                           onClick={() => handleStatusChange(row.id, status)}
                         >
                           {status}

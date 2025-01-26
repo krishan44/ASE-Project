@@ -3,7 +3,7 @@ import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 import edit from '../../../assets/table/edit.svg';
 
-const CustomerTable = ({ branch }) => {
+const CustomerTable = () => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
@@ -13,11 +13,21 @@ const CustomerTable = ({ branch }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Retrieve branch from localStorage
+  const branchName = localStorage.getItem('branch');
+  console.log('Branch Name:', branchName);  
+
   // Fetch data from Flask backend
   useEffect(() => {
+    if (!branchName) {
+      setError('Branch information not found in localStorage.');
+      setIsLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/customer-orders/${branch}`);
+        const response = await fetch(`http://localhost:5001/customer-orders/${branchName}`);
         if (!response.ok) {
           throw new Error('Failed to fetch data');
         }
@@ -33,7 +43,7 @@ const CustomerTable = ({ branch }) => {
     };
 
     fetchData();
-  }, [branch]);
+  }, [branchName]); // Re-fetch data if branch changes
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -42,7 +52,6 @@ const CustomerTable = ({ branch }) => {
   if (error) {
     return <p style={{ color: 'red' }}>{error}</p>;
   }
-
 
   // Handle search input
   const handleSearch = (e) => {
@@ -78,12 +87,14 @@ const CustomerTable = ({ branch }) => {
     setPopupType(null);
   };
 
-  // Filter data based on search value
+  // Filter data based on search value and exclude 'Cancelled', 'Completed', and 'Waiting' statuses
   const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
+    const excludedStatuses = ['cancelled', 'completed', 'waiting']; // Statuses to exclude
     return (
-      row.id.toString().toLowerCase().includes(normalizedSearch) ||
-      row.customer.toLowerCase().includes(normalizedSearch)
+      (row.id.toString().toLowerCase().includes(normalizedSearch) ||
+        row.customer.toLowerCase().includes(normalizedSearch)) &&
+      !excludedStatuses.includes(row.Status.toLowerCase()) // Exclude rows with these statuses
     );
   });
 
@@ -111,12 +122,18 @@ const CustomerTable = ({ branch }) => {
   // Get status style based on status value
   const getStatusStyle = (status) => {
     switch (status.toLowerCase()) {
-      case 'picked':
-        return { backgroundColor: '#4CAF50' }; // Green for Picked
+      case 'completed':
+        return { backgroundColor: '#4CAF50' }; // Green for Completed
       case 'cancelled':
         return { backgroundColor: '#F44336' }; // Red for Cancelled
       case 'arrived':
         return { backgroundColor: '#4379F2' }; // Blue for Arrived
+      case 'confirmed':
+        return { backgroundColor: '#FFC107' }; // Yellow for Confirmed
+      case 'waiting':
+        return { backgroundColor: '#9E9E9E' }; // Gray for Waiting
+      case 'pending':
+        return { backgroundColor: '#FF9800' }; // Orange for Pending
       default:
         return {};
     }
@@ -233,8 +250,8 @@ const TableBody = ({
                 </p>
                 {editingStatusId === row.id && (
                   <div className={style.statusOptions}>
-                    {['Picked', 'Cancelled', 'Arrived']
-                      .filter((status) => status.toLowerCase() !== row.Status.toLowerCase())
+                    {['Cancelled', 'Completed', 'Pending', 'Confirmed', 'Waiting'] // Include all statuses in the dropdown
+                      .filter((status) => status.toLowerCase() !== row.Status.toLowerCase()) // Exclude the current status
                       .map((status) => (
                         <p
                           key={status}
