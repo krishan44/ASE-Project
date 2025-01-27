@@ -22,22 +22,10 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
           <div><span>Admin</span></div>
         </div>
 
-        <div className={style.routes}>
-          <Link to="/admin/dashboard" className={style.optionContainer} onClick={() => setSelectedOption("Overview")}>
-            <img src={dashboard} alt="" className={style.panelIcon} />
-            <span className={`${style.option} ${selectedOption === "Overview" ? style.selected : ""}`}>Overview</span>
-          </Link>
+        <div className={style.routes}> 
           <Link to="/admin/stock_requests" className={style.optionContainer} onClick={() => setSelectedOption("Stock Orders")}>
             <img src={stock} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Stock Orders" ? style.selected : ""}`}>Order Requests</span>
-          </Link>
-          <Link to="/admin/account_manage" className={style.optionContainer} onClick={() => setSelectedOption("Account Manage")}>
-            <img src={Customer} alt="" className={style.panelIcon} />
-            <span className={`${style.option} ${selectedOption === "Account Manage" ? style.selected : ""}`}>Account Manage</span>
-          </Link>
-          <Link to="/admin/outlet_manager" className={style.optionContainer} onClick={() => setSelectedOption("OtManagers")}>
-            <img src={Customer} alt="" className={style.panelIcon} />
-            <span className={`${style.option} ${selectedOption === "OtManagers" ? style.selected : ""}`}>Outlet Managers</span>
           </Link>
           <Link to="/admin/outlet" className={style.optionContainer} onClick={() => setSelectedOption("OtManagement")}>
             <img src={Customer} alt="" className={style.panelIcon} />

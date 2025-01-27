@@ -1,19 +1,183 @@
-import React, { useState } from 'react';
-import { Search, Calendar } from 'lucide-react';
-import style from './StockTable.module.css';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
+
+// Move TableHeader component outside
+const TableHeader = ({ searchValue, handleSearch }) => (
+  <section className={style.table__header}>
+    <div className={style.inputGroup}>
+      <input
+        type="search"
+        placeholder="Search By ID..."
+        value={searchValue}
+        className={style.searchField}
+        onChange={handleSearch}
+      />
+      <img src={search} alt="search icon" className={style.searchIcon} />
+    </div>
+  </section>
+);
+
+// Move TableBody component outside
+const TableBody = ({
+  data,
+  handleSort,
+  sortConfig,
+  handleView,
+  getStatusStyle,
+  editingStatus,
+  setEditingStatus,
+  handleStatusChange,
+  statusOptions
+}) => (
+  <section className={style.table__body}>
+    <table>
+      <thead>
+        <tr>
+          {['Order ID', 'Outlet Name', 'Order', 'Ordered On', 'Status', 'Total'].map((key) => (
+            <th
+              key={key}
+              onClick={() => handleSort(key)}
+              className={sortConfig?.key === key ? sortConfig.direction : ''}
+              style={{ textTransform: 'none' }}
+            >
+              {key}
+              <span className={style.iconArrow}>
+                {sortConfig?.key === key && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+              </span>
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {data.map((row, index) => (
+          <tr
+            key={row.orderid}
+            style={{ backgroundColor: index % 2 === 0 ? 'transparent' : '#0000000b' }}
+          >
+            <td>{row.orderid}</td>
+            <td>{row.outname}</td>
+            <td>
+              <button className={style.viewBtn} onClick={() => handleView('Orders', row)}>
+                View
+              </button>
+            </td>
+            <td>{row.orderedon}</td>
+            <td>
+              <div className={style.statusContainer}>
+                {editingStatus === row.orderid ? (
+                  <select
+                    className={style.statusSelect}
+                    value={row.status}
+                    onChange={(e) => handleStatusChange(row.orderid, e.target.value)}
+                    onBlur={() => setEditingStatus(null)}
+                    autoFocus
+                  >
+                    {statusOptions.map(option => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p
+                    className={`${style.status} ${style[row.status.toLowerCase()]}`}
+                    style={getStatusStyle(row.status)}
+                    onClick={() => setEditingStatus(row.orderid)}
+                  >
+                    {row.status}
+                  </p>
+                )}
+              </div>
+            </td>
+            <td>{row.total}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </section>
+);
+
 const StockTable = () => {
   const [searchValue, setSearchValue] = useState('');
-  const [tableData, setTableData] = useState([
-    { id: 1, customer: 'Zinzu Chan Lee', order: ["2.5 Kg : 2 ", " 5  Kg  : 2 ", "12.5 Kg : 2"], Date: '2022-12-17', Status: 'Delayed', Total: '$128.90', DeliverDate: '2022-12-17'},
-    { id: 2, customer: 'Chan Lee', order: ["2.5 Kg : 10", " 5  Kg : 12", "12.5 Kg : 12"], Date: '2023-08-27', Status: 'Cancelled', Total: '$5350.50' , DeliverDate: '2022-12-17'},
-    { id: 3, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '2023-03-14', Status: 'Confirmed', Total: '$210.40', DeliverDate: '2022-12-17'},
-    { id: 4, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '2023-03-14', Status: 'Confirmed', Total: '$210.40', DeliverDate: '2022-12-17' },
-    { id: 5, customer: 'Ass Chan Lee', order: ["2.5 Kg : 23", " 5  Kg : 22", "12.5 Kg : 22"], Date: '2023-03-14', Status: 'Delivered', Total: '$210.40', DeliverDate: '2022-12-17' },
-  ]);
+  const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [popupData, setPopupData] = useState(null);
+  const [popupType, setPopupType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editingStatus, setEditingStatus] = useState(null);
+
+  // Define available status options
+  const statusOptions = ['Arrived', 'Confirmed', 'Cancelled', 'Delayed', 'Pending'];
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const endpoint = 'outlet-orders-admin';
+      console.log('Fetching all orders');
   
+      try {
+        const response = await fetch(`http://localhost:5001/${endpoint}`);
+        console.log('Response received:', response);
+  
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Failed to fetch data. Response status:', response.status, 'Response text:', errorText);
+          throw new Error(`Failed to fetch data: ${response.status} ${errorText}`);
+        }
+  
+        const data = await response.json();
+        console.log('Data received:', data);
+  
+        if (data.message) {
+          console.log('No orders found');
+          setTableData([]);
+          setError(data.message);
+        } else {
+          console.log('Orders data set to state');
+          setTableData(data);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch orders. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
+  }, []);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:5001/update-order-status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderId,
+          status: newStatus
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update status');
+      }
+
+      setTableData(prevData =>
+        prevData.map(row =>
+          row.orderid === orderId ? { ...row, status: newStatus } : row
+        )
+      );
+    } catch (error) {
+      console.error('Error updating status:', error);
+    } finally {
+      setEditingStatus(null);
+    }
+  };
+
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
   };
@@ -26,34 +190,49 @@ const StockTable = () => {
     setSortConfig({ key, direction });
   };
 
-  const handleView = (order) => {
-    setSelectedOrder(order);
+  const formatOrderDetails = (row) => {
+    const orderDetails = [];
+    
+    if (row.twoandhalfkg > 0) {
+      orderDetails.push(`2.5 KG Cylinders: ${row.twoandhalfkg}`);
+    }
+    if (row.fivekg > 0) {
+      orderDetails.push(`5 KG Cylinders: ${row.fivekg}`);
+    }
+    if (row.twelevekg > 0) {
+      orderDetails.push(`12.5 KG Cylinders: ${row.twelevekg}`);
+    }
+    if (row.thirtysevenkg > 0) {
+      orderDetails.push(`37.5 KG Cylinders: ${row.thirtysevenkg}`);
+    }
+
+    return orderDetails.length > 0 ? orderDetails : ['No cylinders ordered'];
   };
 
-  const handleDateChange = (id, newDate) => {
-    setTableData(prevData =>
-      prevData.map(row => 
-        row.id === id ? { ...row, DeliverDate: newDate } : row
-      )
-    );
-  };
-
-  const handleStatusChange = (id, newStatus) => {
-    setTableData(prevData =>
-      prevData.map(row => 
-        row.id === id ? { ...row, Status: newStatus } : row
-      )
-    );
+  const handleView = (type, data) => {
+    if (type === 'Orders') {
+      const orderDetails = formatOrderDetails(data);
+      setPopupData(orderDetails);
+    } else {
+      setPopupData(Array.isArray(data) ? data : [data]);
+    }
+    setPopupType(type);
   };
 
   const closePopup = () => {
-    setSelectedOrder(null);
+    setPopupData(null);
+    setPopupType(null);
   };
 
-  const filteredData = tableData.filter(row => {
+  const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
-    return row.id.toString().toLowerCase().includes(normalizedSearch) ||
-           row.customer.toLowerCase().includes(normalizedSearch);
+    const validStatuses = ['arrived', 'waiting', 'pending', 'confirmed'];
+
+    return (
+      (row.orderid.toString().toLowerCase().includes(normalizedSearch) ||
+        row.outname.toLowerCase().includes(normalizedSearch)) &&
+      validStatuses.includes(row.status.toLowerCase())
+    );
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -62,171 +241,101 @@ const StockTable = () => {
       let aValue = a[key];
       let bValue = b[key];
 
-      if (key === 'id') {
+      if (key === 'orderid') {
         aValue = parseInt(aValue);
         bValue = parseInt(bValue);
-      } else if (key === 'Date') {
+      } else if (key === 'createdon' || key === 'orderedon' || key === 'completedon') {
         aValue = new Date(aValue);
         bValue = new Date(bValue);
       }
 
-      return direction === 'asc' 
-        ? aValue < bValue ? -1 : 1
-        : aValue > bValue ? -1 : 1;
+      if (aValue < bValue) return direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) return direction === 'asc' ? 1 : -1;
     }
     return 0;
   });
 
-  const OrderPopup = ({ order }) => {
-    const [editDeliverDate, setDeliverDate] = useState(order.DeliverDate);
-    const [editStatus, setEditStatus] = useState(order.Status);
-    
-    const handleSave = () => {
-      handleDateChange(order.id, editDeliverDate);
-      handleStatusChange(order.id, editStatus);
-      closePopup();
-    };
-
-    return (
-      <div className={style.popupOverlay}>
-        <div className={style.popup}>
-          <div className={style.popupContent}>
-            <h3 className={style.popupTitle}>Order Details</h3>
-            
-            {/* Order items display */}
-            <div className={style.orderItems}>
-              {order.order.map((item, index) => (
-                <p key={index}>{item}</p>
-              ))}
-            </div>
-
-            {/* Status Selection */}
-            <div className={style.inputGroup}>
-              <label>Status</label>
-              <select
-                value={editStatus}
-                onChange={(e) => setEditStatus(e.target.value)}
-                className={style.selectField}
-              >
-                {['Delivered', 'Cancelled', 'Delayed', 'Confirmed'].map(status => (
-                  <option key={status} value={status}>{status}</option>
-                ))}
-              </select>
-            </div>
-
-            {/* Date Selection */}
-            <div className={style.inputGroup}>
-              <label>Order Date</label>
-              <div className={style.dateInputContainer}>
-                <input
-                  type="date"
-                  value={editDeliverDate}
-                  onChange={(e) => setDeliverDate(e.target.value)}
-                  className={style.dateField}
-                />
-                <Calendar className={style.calendarIcon} size={20} />
-              </div>
-            </div>
-
-            {/* Customer Info */}
-            <div className={style.orderInfo}>
-              <div className={style.infoRow}>
-                <span>Customer:</span>
-                <span>{order.customer}</span>
-              </div>
-              <div className={style.infoRow}>
-                <span>Total Amount:</span>
-                <span>{order.Total}</span>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className={style.buttonGroup}>
-              <button onClick={closePopup} className={style.cancelBtn}>
-                Cancel
-              </button>
-              <button onClick={handleSave} className={style.saveBtn}>
-                Save Changes
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+  const getStatusStyle = (status) => {
+    switch (status.toLowerCase()) {
+      case 'picked':
+        return { backgroundColor: '#4CAF50' };
+      case 'cancelled':
+        return { backgroundColor: '#F44336' };
+      case 'arrived':
+        return { backgroundColor: '#4379F2' };
+      case 'confirmed':
+        return { backgroundColor: '#2196F3' };
+      case 'delayed':
+        return { backgroundColor: '#FF9800' };
+      case 'pending':
+        return { backgroundColor: '#FFC107' };
+      default:
+        return {};
+    }
   };
 
   return (
     <div className={style.App}>
       <main className={style.table} id="customers_table">
-        {/* Search Header */}
-        <section className={style.table__header}>
-        <div className={style.inputGroup}>
-            <input
-              type="search"
-              placeholder="Search By ID..."
-              value={searchValue}
-              className={style.searchField}
-              onChange={handleSearch}
-            />
-            <img src={search} alt="search icon" className={style.searchIcon} />
-          </div>
-        </section>
-
-        {/* Table Body */}
-        <section className={style.table__body}>
-          <table>
-            <thead>
-              <tr>
-                {['Order ID', 'Customer', 'Order', 'Order Date', 'Status', 'Total', 'Deliver Date'].map((header) => (
-                  <th
-                    key={header}
-                    onClick={() => handleSort(header)}
-                    className={sortConfig?.key === header ? sortConfig.direction : ''}
-                  >
-                    <div className={style.headerCell}>
-                      {header}
-                      {sortConfig?.key === header && (
-                        <span className={style.iconArrow}>
-                          {sortConfig.direction === 'asc' ? '↑' : '↓'}
-                        </span>
-                      )}
-                    </div>
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {sortedData.map((row) => (
-                <tr key={row.id}>
-                  <td>{row.id}</td>
-                  <td>{row.customer}</td>
-                  <td>
-                    <button
-                      onClick={() => handleView(row)}
-                      className={style.viewBtn}
-                    >
-                      View
-                    </button>
-                  </td>
-                  <td>{row.Date}</td>
-                  <td>
-                    <span>
-                      {row.Status}
-                    </span>
-                  </td>
-                  <td>{row.Total}</td>
-                  <td>{row.DeliverDate}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
+        <TableHeader searchValue={searchValue} handleSearch={handleSearch} />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p style={{ color: 'red' }}>{error}</p>
+        ) : (
+          <TableBody
+            data={sortedData}
+            handleSort={handleSort}
+            sortConfig={sortConfig}
+            handleView={handleView}
+            getStatusStyle={getStatusStyle}
+            editingStatus={editingStatus}
+            setEditingStatus={setEditingStatus}
+            handleStatusChange={handleStatusChange}
+            statusOptions={statusOptions}
+          />
+        )}
       </main>
 
-      {/* Order Popup */}
-      {selectedOrder && <OrderPopup order={selectedOrder} />}
+      {popupData && (
+        <div className={style.popupOverlay}>
+          <div className={style.popup}>
+            <div className={style.popupContent}>
+              <h3 className={style.popupTitle}>
+                {popupType === 'Orders' ? 'Order Details' : 'Tank Details'}
+              </h3>
+              <div className={style.popupDetails}>
+                {popupData.map((item, index) => (
+                  <p key={index} className={style.popupItem}>{item}</p>
+                ))}
+              </div>
+              <button onClick={closePopup} className={style.closeBtn}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
+};
+
+// Define PropTypes
+TableHeader.propTypes = {
+  searchValue: PropTypes.string.isRequired,
+  handleSearch: PropTypes.func.isRequired,
+};
+
+TableBody.propTypes = {
+  data: PropTypes.array.isRequired,
+  handleSort: PropTypes.func.isRequired,
+  sortConfig: PropTypes.object,
+  handleView: PropTypes.func.isRequired,
+  getStatusStyle: PropTypes.func.isRequired,
+  editingStatus: PropTypes.number,
+  setEditingStatus: PropTypes.func.isRequired,
+  handleStatusChange: PropTypes.func.isRequired,
+  statusOptions: PropTypes.array.isRequired,
 };
 
 export default StockTable;

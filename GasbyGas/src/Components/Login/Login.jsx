@@ -89,7 +89,7 @@ const Login = () => {
             navigate('/outlet-dashboard');
             break;
           case 'Admin':
-            navigate('/admin/dashboard');
+            navigate('/admin/stock_requests');
             break;
           default:
             alert('Unknown role');
