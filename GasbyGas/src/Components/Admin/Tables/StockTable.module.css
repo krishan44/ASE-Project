@@ -72,7 +72,7 @@ table {
      width: 20px;
      height: 20px;
      position: absolute;
-     top: 40%;
+     top: 50%;
      left: 30px;
      transform: translateY(-50%);
      pointer-events: none;
@@ -137,10 +137,7 @@ tbody tr.hide td img {
 }
 
 .status {
-    /* padding: .4rem 0; */
-    padding-left: 6px;
-    padding-right: 6px;
-    width: auto;
+    padding: .4rem 0;
     border-radius: 2rem;
     text-align: center;
     color: #fff;
@@ -168,7 +165,6 @@ tbody tr.hide td img {
   margin: 0;
   padding: 5px 10px;
   cursor: pointer;
-  width: 100px;
 }
 
 .statusOptions p:hover {
@@ -283,144 +279,3 @@ thead th.active,tbody td.active {
   .closeBtn:hover {
     background: #e04343;
   }
-
-  .delayed {
-    background-color: #188be9; /* Green for Delayed */
-  }
-  
-  .cancelled {
-    background-color: #F44336; /* Red for Cancelled */
-  }
-  
-  .confirmed {
-    background-color: #16C47F; /* Green for Confirmed */
-  }
-  
-  .onRoute {
-    background-color: #cb26e0; /* Purple for On Route */
-  }
-  
-  .delivered {
-    background-color: #3400f1; /* Light Green for Delivered */
-  }
-
-  .popupOverlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 50;
-  }
-  
-  .popup {
-    background: white;
-    border-radius: 8px;
-    padding: 1.5rem;
-    max-width: 28rem;
-    width: 100%;
-    margin: 0 1rem;
-  }
-  
-  .popupTitle {
-    font-size: 1.125rem;
-    font-weight: 500;
-    margin-bottom: 1rem;
-  }
-  
-  .orderItems {
-    margin-bottom: 1.5rem;
-    padding: 0.75rem;
-    background: #f9fafb;
-    border-radius: 6px;
-  }
-  
-  .inputGroup {
-    margin-bottom: 1rem;
-  }
-  
-  .inputGroup label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-  
-  .selectField,
-  .dateField {
-    width: 100%;
-    padding: 0.5rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 6px;
-    margin-bottom: 1rem;
-  }
-  
-  .dateInputContainer {
-    position: relative;
-  }
-  
-  .calendarIcon {
-    position: absolute;
-    right: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #9ca3af;
-  }
-  
-  .orderInfo {
-    margin-bottom: 1.5rem;
-  }
-  
-  .infoRow {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0.5rem;
-  }
-  
-  .buttonGroup {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.75rem;
-  }
-  
-  .cancelBtn,
-  .saveBtn {
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-  
-  .cancelBtn {
-    border: 1px solid #9e9fa1;
-    background: white;
-  }
-  
-  .saveBtn {
-    background: #7c7e81;
-    color: white;
-  }
-
-.viewBtn {
-    width: 80px;
-    height: 45px;
-    background-color: #7c7e81;
-    color: #FFF;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
-}
-.viewBtn:hover {
-    color: #344CB7;
-    background-color: transparent;
-    border: 1px solid #344CB7;
-    transition: 0.2s ease;
-}
-
-.saveBtn:hover {
-    color: #344CB7;
-    background-color: transparent;
-    border: 1px solid #344CB7;
-    transition: 0.2s ease;
-}

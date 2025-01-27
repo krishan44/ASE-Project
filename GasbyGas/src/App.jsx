@@ -17,7 +17,6 @@ import BusinessOrders from "./Components/OutletManager/BusinessOrder";
 import StockOrders from "./Components/OutletManager/StockOrder";
 import Delete from "./Components/OutletManager/Notifications/delete";
 import Waitlist from './Components/OutletManager/Waitlist';
-import AdminOverview from './Components/Admin/Overview';
 import StockOrderRequests from './Components/Admin/StockOrder';
 import AccountManage from './Components/Admin/manageAccount';
 import AdminReports from './Components/Admin/AdminReport';
@@ -47,7 +46,7 @@ function App() {
         <Route path="/delete" element={<Delete />} />
         <Route path="/waitlist_manage" element={<Waitlist />} />
 
-        <Route path="/admin/dashboard" element={<AdminOverview />} />
+       
         <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
         <Route path="/admin/account_manage" element={<AccountManage />} />
         <Route path="/admin/reports" element={<AdminReports />} />

@@ -1,13 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import styles from './OutletManagement.module.css';
-import OutletModal from './OutletModal';
+
+const OutletModal = ({ isOpen, onClose, onSubmit, outlet }) => {
+  const [formData, setFormData] = useState({
+    name: outlet?.name || '',
+    address: outlet?.address || '',
+    email: outlet?.email || '',
+    contactNumber: outlet?.contactNumber || '',
+    username: outlet?.username || '',
+    password: outlet?.password || ''
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+    onClose();
+  };
+
+  return isOpen ? (
+    <div className={styles.modalOverlay}>
+      <div className={styles.modal}>
+        <h2>{outlet ? 'Edit Outlet' : 'Add New Outlet'}</h2>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formGroup}>
+            <label>Outlet Name:</label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Username:</label>
+            <input
+              type="text"
+              value={formData.username}
+              onChange={(e) => setFormData({...formData, username: e.target.value})}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Password:</label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({...formData, password: e.target.value})}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Address:</label>
+            <input
+              type="text"
+              value={formData.address}
+              onChange={(e) => setFormData({...formData, address: e.target.value})}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Email:</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              required
+            />
+          </div>
+          <div className={styles.formGroup}>
+            <label>Contact Number:</label>
+            <input
+              type="tel"
+              value={formData.contactNumber}
+              onChange={(e) => setFormData({...formData, contactNumber: e.target.value})}
+              required
+            />
+          </div>
+          <div className={styles.modalButtons}>
+            <button type="submit" className={styles.submitButton}>
+              {outlet ? 'Update' : 'Add'}
+            </button>
+            <button type="button" onClick={onClose} className={styles.cancelButton}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  ) : null;
+};
 
 const OutletManagement = () => {
   const [outlets, setOutlets] = useState([]);
-  const [selectedOutlet, setSelectedOutlet] = useState(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
     fetchOutlets();
@@ -15,30 +101,18 @@ const OutletManagement = () => {
 
   const fetchOutlets = async () => {
     try {
-      const response = await axios.get('/api/outlets');
-      
-      // Handle different possible response formats
-      const outletData = Array.isArray(response.data) 
-        ? response.data 
-        : response.data.outlets || response.data.data || [];
-      
-      setOutlets(outletData);
+      const response = await axios.get('http://localhost:5001/outlets');
+      setOutlets(response.data);
     } catch (error) {
       console.error('Fetch outlets error:', error);
       alert('Failed to fetch outlets');
     }
   };
 
-  const handleView = (outlet) => {
-    setSelectedOutlet(outlet);
-    setIsEditModalOpen(true);
-  };
-
   const handleAddOutlet = async (outletData) => {
     try {
-      const response = await axios.post('/api/outlets', outletData);
+      const response = await axios.post('http://localhost:5001/outlets', outletData);
       setOutlets(prev => [...prev, response.data]);
-      setIsAddModalOpen(false);
       alert('Outlet added successfully');
     } catch (error) {
       console.error('Add outlet error:', error);
@@ -46,24 +120,10 @@ const OutletManagement = () => {
     }
   };
 
-  const handleUpdateOutlet = async (updatedOutlet) => {
-    try {
-      const response = await axios.put(`/api/outlets/${updatedOutlet.id}`, updatedOutlet);
-      setOutlets(prev => 
-        prev.map(outlet => outlet.id === updatedOutlet.id ? response.data : outlet)
-      );
-      setIsEditModalOpen(false);
-      alert('Outlet updated successfully');
-    } catch (error) {
-      console.error('Update outlet error:', error);
-      alert('Failed to update outlet');
-    }
-  };
-
   const handleDeleteOutlet = async (outletId) => {
     if (window.confirm('Are you sure you want to delete this outlet?')) {
       try {
-        await axios.delete(`/api/outlets/${outletId}`);
+        await axios.delete(`http://localhost:5001/outlets/${outletId}`);
         setOutlets(prev => prev.filter(outlet => outlet.id !== outletId));
         alert('Outlet deleted successfully');
       } catch (error) {
@@ -73,59 +133,40 @@ const OutletManagement = () => {
     }
   };
 
-  // Sample hardcoded data for testing
-  const testOutlets = [
-    {
-      id: 1,
-      name: 'Downtown Cafe',
-      address: '123 Main St',
-      outletManager: { name: 'John Doe' }
-    },
-    {
-      id: 2,
-      name: 'Riverside Branch',
-      address: '456 River Rd',
-      outletManager: { name: 'Jane Smith' }
-    }
-  ];
-
-  // Use testOutlets if real data fails
-  const displayOutlets = outlets.length > 0 ? outlets : testOutlets;
-
   return (
     <div className={styles.container}>
-      <button 
-        onClick={() => setIsAddModalOpen(true)} 
-        className={`${styles.actionButton} ${styles.btn}`}
-      >
-       + Add New Outlet
-      </button>
+      <div className={styles.header}>
+        <button 
+          onClick={() => setIsAddModalOpen(true)} 
+          className={styles.addButton}
+        >
+          + Add New Outlet
+        </button>
+      </div>
 
       <table className={styles.table}>
         <thead>
-          <tr className={styles.tableHeader}>
+          <tr>
+            <th>Outlet ID</th>
             <th>Outlet Name</th>
             <th>Address</th>
-            <th>Outlet Manager</th>
+            <th>Email</th>
+            <th>Contact Number</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {displayOutlets.map(outlet => (
-            <tr key={outlet.id} className={styles.tableRow}>
+          {outlets.map(outlet => (
+            <tr key={outlet.id}>
+              <td>{outlet.id}</td>
               <td>{outlet.name}</td>
               <td>{outlet.address}</td>
-              <td>{outlet.outletManager?.name || 'No Manager'}</td>
+              <td>{outlet.email}</td>
+              <td>{outlet.contactNumber}</td>
               <td>
                 <button 
-                  onClick={() => handleView(outlet)} 
-                  className={`${styles.viewButton} ${styles.btn}`}
-                >
-                  View
-                </button>
-                <button 
                   onClick={() => handleDeleteOutlet(outlet.id)} 
-                  className={`${styles.deleteButton} ${styles.btn}`}
+                  className={styles.deleteButton}
                 >
                   Delete
                 </button>
@@ -135,23 +176,12 @@ const OutletManagement = () => {
         </tbody>
       </table>
 
-      {isAddModalOpen && (
-        <OutletModal
-          isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
-          onSubmit={handleAddOutlet}
-          outlet={null}
-        />
-      )}
-
-      {isEditModalOpen && selectedOutlet && (
-        <OutletModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onSubmit={handleUpdateOutlet}
-          outlet={selectedOutlet}
-        />
-      )}
+      <OutletModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onSubmit={handleAddOutlet}
+        outlet={null}
+      />
     </div>
   );
 };
