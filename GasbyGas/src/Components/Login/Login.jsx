@@ -47,7 +47,7 @@ const Login = () => {
       });
 
       const result = await response.json();
-
+      console.log('Login response:', result);
       if (response.ok) {
         // Save user information to localStorage
         localStorage.setItem('user', JSON.stringify(result));
@@ -65,8 +65,8 @@ const Login = () => {
           localStorage.setItem('customerId', result.customerid);
           console.log('Customer ID saved to localStorage:', result.customerid);
         } else if (result.role === 'business') {
-          localStorage.setItem('businessId', result.businessid);
-          console.log('Business ID saved to localStorage:', result.businessid);
+          localStorage.setItem('businessId', result.branch.businessid);
+          console.log('Business ID saved to localStorage:', result.branch.businessid);
 
           // Save branch information if available
           if (result.branch) {
