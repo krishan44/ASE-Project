@@ -25,6 +25,7 @@ import CusOrders from './Components/Customer/cusOrders';
 import CusProfile from './Components/Customer/CustomerProfile';
 import OutletManage from './Components/Admin/OutletManagers';
 import AdminOutlet from './Components/Admin/Outlets';
+import Report from './Components/Admin/Report';
 
 function App() {
   return (
@@ -49,10 +50,10 @@ function App() {
        
         <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
         <Route path="/admin/account_manage" element={<AccountManage />} />
-        <Route path="/admin/reports" element={<AdminReports />} />
+        <Route path="/admin/reports" element={<Report />} />
         <Route path="/admin/outlet_manager" element={<OutletManage />} />
         <Route path="/admin/outlet" element={<AdminOutlet />} />
-
+        <Route path="/admin/report" element={<Report />} />
         <Route path="/customer/overview" element={<CusOrders />} />
         <Route path="/customer/order_history" element={<OrderHistory />} />
         <Route path="/customer/profile" element={<CusProfile />} />

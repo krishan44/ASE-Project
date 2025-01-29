@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import style from './customerTable.module.css';
 import search from '../../../assets/table/search.svg';
 
-const CustomerTable = () => {
+const CustomerTable = ({ onOrderStatusChange }) => {
   const [searchValue, setSearchValue] = useState('');
   const [tableData, setTableData] = useState([]);
   const [sortConfig, setSortConfig] = useState(null);
@@ -14,15 +14,12 @@ const CustomerTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // Retrieve customerId and businessId from localStorage
-      const customerid = localStorage.getItem('customerId'); // For customers
-      const businessid = localStorage.getItem('businessId'); // For businesses
+      const customerid = localStorage.getItem('customerId');
+      const businessid = localStorage.getItem('businessId');
 
-      // Debug logs to verify the values
       console.log('Customer ID from localStorage:', customerid);
       console.log('Business ID from localStorage:', businessid);
 
-      // Check if either customerId or businessId exists
       if (!customerid && !businessid) {
         console.error("Customer ID or Business ID not found in localStorage");
         setError('Customer ID or Business ID not found. Please log in again.');
@@ -30,7 +27,6 @@ const CustomerTable = () => {
         return;
       }
 
-      // Determine the endpoint based on the user's role
       const endpoint = businessid ? `business-orders/${businessid}` : `customer-orders/${customerid}`;
       console.log(`Fetching orders for ${businessid ? 'business' : 'customer'} ID: ${businessid || customerid}`);
 
@@ -51,20 +47,29 @@ const CustomerTable = () => {
           console.log("No orders found for this user");
           setTableData([]);
           setError(data.message);
+          onOrderStatusChange(false);
         } else {
           console.log("Orders data set to state");
           setTableData(data);
+          
+          // Check for pending or waiting orders
+          const hasPendingOrWaiting = data.some(order => 
+            order.Status.toLowerCase() === 'pending' || 
+            order.Status.toLowerCase() === 'waiting'
+          );
+          onOrderStatusChange(hasPendingOrWaiting);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
         setError('Failed to fetch orders. Please try again.');
+        onOrderStatusChange(false);
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [onOrderStatusChange]);
 
   const handleSearch = (e) => {
     setSearchValue(e.target.value);
@@ -90,12 +95,12 @@ const CustomerTable = () => {
 
   const filteredData = tableData.filter((row) => {
     const normalizedSearch = searchValue.toLowerCase().trim();
-    const validStatuses = ['arrived', 'waiting', 'pending','confirmed']; // Add the statuses you want to include
+    const validStatuses = ['arrived', 'waiting', 'pending', 'confirmed'];
 
     return (
       (row.id.toString().toLowerCase().includes(normalizedSearch) ||
         row.customer.toLowerCase().includes(normalizedSearch)) &&
-      validStatuses.includes(row.Status.toLowerCase()) // Filter by status
+      validStatuses.includes(row.Status.toLowerCase())
     );
   });
 
@@ -127,6 +132,10 @@ const CustomerTable = () => {
         return { backgroundColor: '#F44336' };
       case 'arrived':
         return { backgroundColor: '#4379F2' };
+      case 'pending':
+        return { backgroundColor: '#FFA500' };
+      case 'waiting':
+        return { backgroundColor: '#FFD700' };
       default:
         return {};
     }
@@ -174,6 +183,10 @@ const CustomerTable = () => {
       )}
     </div>
   );
+};
+
+CustomerTable.propTypes = {
+  onOrderStatusChange: PropTypes.func.isRequired,
 };
 
 const TableHeader = ({ searchValue, handleSearch }) => (

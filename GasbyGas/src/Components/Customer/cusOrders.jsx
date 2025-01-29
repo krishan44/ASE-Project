@@ -1,40 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import style from "./cusOrders.module.css";
 import MainDashboard from "./CustomerDashboard";
 import CustomerTable from './Tables/customerTable';
 import AddNew from "./Tables/addNew";
 import Alert from "@mui/material/Alert";
-import CheckIcon from "@mui/icons-material/Check";
 import AlertTitle from '@mui/material/AlertTitle';
-// import Delete from "./Notifications/delete";
 
 function CusOrders() {
     const [selectedOption, setSelectedOption] = useState("Overview");
-    const [isAddNewVisible, setIsAddNewVisible] = useState(false); // Manage AddNew popup visibility
-    const [isAlertVisible, setIsAlertVisible] = useState(false); // Manage alert visibility
-    // const [isDelAlertVisible,setisDelAlertVisible]= useState(false); //Manage Delete Alert
+    const [isAddNewVisible, setIsAddNewVisible] = useState(false);
+    const [isAlertVisible, setIsAlertVisible] = useState(false);
+    const [hasPendingOrder, setHasPendingOrder] = useState(false);
 
+    // Check for pending or waiting orders
+    const checkPendingOrders = (tableData) => {
+        return tableData.some(order => 
+            order.Status.toLowerCase() === 'pending' || 
+            order.Status.toLowerCase() === 'waiting'
+        );
+    };
 
     const handleAddClick = () => {
-        setIsAddNewVisible(true); // Show the AddNew popup
+        setIsAddNewVisible(true);
     };
 
     const handleCloseAddNew = () => {
-        setIsAddNewVisible(false); // Close the AddNew popup
+        setIsAddNewVisible(false);
     };
 
     const handleSaveClick = () => {
-        setIsAlertVisible(true); // Show the alert
-        setTimeout(() => setIsAlertVisible(false), 3000); // Hide the alert after 3 seconds
+        setIsAlertVisible(true);
+        setTimeout(() => setIsAlertVisible(false), 3000);
     };
 
-    // const handleDeleteClick = () =>{
-    //     setisDelAlertVisible(true);
-    // }
-
-    // const handleDeleteClose=()=>{
-    //     setisDelAlertVisible(false);
-    // }
+    // Function to update pending order status
+    const updatePendingStatus = (hasActivePendingOrder) => {
+        setHasPendingOrder(hasActivePendingOrder);
+    };
 
     return (
         <>
@@ -52,44 +54,30 @@ function CusOrders() {
                     <hr />
                     <div className={style.btns}>
                         <div>
-                            <button className={style.addBtn} onClick={handleAddClick}>
+                            <button 
+                                className={`${style.addBtn} ${hasPendingOrder ? style.disabled : ''}`}
+                                onClick={handleAddClick}
+                                disabled={hasPendingOrder}
+                                title={hasPendingOrder ? "Cannot place new order while having pending or waiting orders" : "Place new order"}
+                            >
                                 Place Order
                             </button>
-                            
                         </div>
-                        {/* <button className={style.delBtn} onClick={handleDeleteClick}>Delete</button> */}
                     </div>
                     <div className={style.table}>
-                        <CustomerTable />
+                        <CustomerTable onOrderStatusChange={updatePendingStatus} />
                     </div>
-                    {/* Alert for Save button */}
                     {isAlertVisible && (
                         <div className={style.alertContainer}>
                             <Alert severity="success">
-                            <AlertTitle>Success</AlertTitle>
-                            Order updated.
+                                <AlertTitle>Success</AlertTitle>
+                                Order updated.
                             </Alert>
                         </div>
                     )}
-
-                    {/* {isDelAlertVisible && (
-                         <div className={style.DelpopupOverlay}>
-                         <div className={style.DelpopupContent}>
-                             <Delete />
-                             <button
-                                 className={style.closeBtn}
-                                 onClick={handleDeleteClose}
-                             >
-                                 Close
-                             </button>
-                         </div>
-                     </div>
-                        
-                    )} */}
                 </div>
             </div>
 
-            {/* Popup for AddNew */}
             {isAddNewVisible && (
                 <div className={style.popupOverlay}>
                     <div className={style.popupContent}>

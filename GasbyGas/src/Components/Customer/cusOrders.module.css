@@ -183,3 +183,33 @@
     position: relative;
 }
 
+/* Add these styles to your cusOrders.module.css file */
+.disabled {
+    opacity: 0.6;
+    cursor: not-allowed !important;
+    background-color: #cccccc !important;
+    pointer-events: none;
+}
+
+.disabled:hover {
+    opacity: 0.6;
+    background-color: #cccccc !important;
+}
+
+/* Add these styles if not already present */
+.status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    display: inline-block;
+    font-size: 0.9em;
+}
+
+.pending {
+    background-color: #FFA500;
+}
+
+.waiting {
+    background-color: #FFD700;
+    color: black;
+}
