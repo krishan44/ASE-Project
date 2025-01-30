@@ -68,6 +68,7 @@ const CustomerTable = () => {
         body: JSON.stringify({
           status: newStatus,
           completeddate: newStatus.toLowerCase() === 'completed' ? new Date().toISOString() : null,
+          completeddate: newStatus.toLowerCase() === 'arrived' ? new Date().toISOString() : null,
         }),
       });
   
