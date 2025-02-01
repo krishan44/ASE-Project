@@ -1,6 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './Components/AdminAuth/AuthContext';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 
 import Login from './Components/Login/Login';
@@ -23,167 +22,38 @@ import OrderHistory from './Components/Customer/OrderHistory';
 import CusOrders from './Components/Customer/cusOrders';
 import CusProfile from './Components/Customer/CustomerProfile';
 
-// Protected Route Component
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { isAuthenticated, user } = useAuth();
-
-  if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
-
-  if (allowedRoles && !allowedRoles.includes(user?.role)) {
-    return <Navigate to="/" replace />;
-  }
-
-  return children;
-};
-
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public Routes */}
-          <Route path="/" element={<Login />} />
-          <Route path="/Registration" element={<Registration />} />
-          <Route path="/Verify" element={<Verify />} />
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Login />} />
+        <Route path="/Registration" element={<Registration />} />
+        <Route path="/Verify" element={<Verify />} />
 
-          {/* Outlet Manager Routes */}
-          <Route 
-            path="/outlet-dashboard" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <Overview />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/orders" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <CustomerOrders />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/customers" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <Customers />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/manage_accounts" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <ManageStock />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/business_orders" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <BusinessOrders />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/stock_orders" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <StockOrders />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/delete" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <Delete />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/waitlist_manage" 
-            element={
-              <ProtectedRoute allowedRoles={['outlet_manager']}>
-                <Waitlist />
-              </ProtectedRoute>
-            } 
-          />
+        {/* Outlet Manager Routes */}
+        <Route path="/outlet-dashboard" element={<Overview />} />
+        <Route path="/orders" element={<CustomerOrders />} />
+        <Route path="/customers" element={<Customers />} />
+        <Route path="/manage_accounts" element={<ManageStock />} />
+        <Route path="/business_orders" element={<BusinessOrders />} />
+        <Route path="/stock_orders" element={<StockOrders />} />
+        <Route path="/delete" element={<Delete />} />
+        <Route path="/waitlist_manage" element={<Waitlist />} />
 
-          {/* Admin Routes */}
-          <Route 
-            path="/admin/stock_requests" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <StockOrderRequests />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/account_manage" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AccountManage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/reports" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <Report />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/outlet_manager" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <OutletManage />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin/outlet" 
-            element={
-              <ProtectedRoute allowedRoles={['admin']}>
-                <AdminOutlet />
-              </ProtectedRoute>
-            } 
-          />
+        {/* Admin Routes */}
+        <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
+        <Route path="/admin/account_manage" element={<AccountManage />} />
+        <Route path="/admin/reports" element={<Report />} />
+        <Route path="/admin/outlet_manager" element={<OutletManage />} />
+        <Route path="/admin/outlet" element={<AdminOutlet />} />
 
-          {/* Customer Routes */}
-          <Route 
-            path="/customer/overview" 
-            element={
-              <ProtectedRoute allowedRoles={['customer']}>
-                <CusOrders />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/customer/order_history" 
-            element={
-              <ProtectedRoute allowedRoles={['customer']}>
-                <OrderHistory />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/customer/profile" 
-            element={
-              <ProtectedRoute allowedRoles={['customer']}>
-                <CusProfile />
-              </ProtectedRoute>
-            } 
-          />
-        </Routes>
-      </Router>
-    </AuthProvider>
+        {/* Customer Routes */}
+        <Route path="/customer/overview" element={<CusOrders />} />
+        <Route path="/customer/order_history" element={<OrderHistory />} />
+        <Route path="/customer/profile" element={<CusProfile />} />
+      </Routes>
+    </Router>
   );
 }
 
