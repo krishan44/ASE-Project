@@ -4,7 +4,7 @@ import MainDashboard from "./MainDashboard";
 import { Package, RefreshCcw, Loader2 } from "lucide-react";
 
 const StockManagement = () => {
-  const [selectedOption, setSelectedOption] = useState("Stock Management");
+  const [selectedOption, setSelectedOption] = useState("Stock Manage");
   const [stockLevels, setStockLevels] = useState({
     "2.5Kg": 0,
     "5Kg": 0,

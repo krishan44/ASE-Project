@@ -43,9 +43,9 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
             <img src={waitlist} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Waitlist Manage" ? style.selected : ""}`}>Waitlist Manage</span>
           </Link>  
-          <Link to="/manage_accounts" className={style.optionContainer} onClick={() => setSelectedOption("Account Manage")}>
+          <Link to="/manage_accounts" className={style.optionContainer} onClick={() => setSelectedOption("Stock Manage")}>
           <img src={Customer} alt="" className={style.panelIcon} />
-            <span className={`${style.option} ${selectedOption === "Account Manage" ? style.selected : ""}`}>Stock Manage</span>
+            <span className={`${style.option} ${selectedOption === "Stock Manage" ? style.selected : ""}`}>Stock Manage</span>
           </Link>
       
           <div className={style.Logout}>
