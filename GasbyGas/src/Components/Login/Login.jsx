@@ -86,7 +86,7 @@ const Login = () => {
             navigate('/customer/overview');
             break;
           case 'outlet':
-            navigate('/outlet-dashboard');
+            navigate('/orders');
             break;
           case 'admin':
             navigate('/admin/stock_requests');

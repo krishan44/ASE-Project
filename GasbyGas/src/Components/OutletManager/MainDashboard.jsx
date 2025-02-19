@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../Components/AdminAuth/AuthContext';
 import style from "./MainDashboard.module.css";
 import order from "../../assets/Pannel/order.svg";
 import Customer from "../../assets/Pannel/customer.svg";
@@ -11,8 +12,13 @@ import logOut from "../../assets/Pannel/logOut.svg";
 
 
 function MainDashboard({ selectedOption, setSelectedOption }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
-  
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className={style.Maindashboard}>
@@ -48,10 +54,10 @@ function MainDashboard({ selectedOption, setSelectedOption }) {
             <span className={`${style.option} ${selectedOption === "Account Manage" ? style.selected : ""}`}>Stock Manage</span>
           </Link>
       
-          <div className={style.Logout}>
-          <span>Logout</span>
-          <img src={logOut} className={style.logOutI} alt="LogOut icon" />
-        </div>
+          <div className={style.Logout} onClick={handleLogout}>
+            <span>Logout</span>
+            <img src={logOut} className={style.logOutI} alt="LogOut icon" />
+          </div>
         </div>
           </div>
         </div>

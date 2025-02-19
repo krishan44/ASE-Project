@@ -21,39 +21,42 @@ import Report from './Components/Admin/Report';
 import OrderHistory from './Components/Customer/OrderHistory';
 import CusOrders from './Components/Customer/cusOrders';
 import CusProfile from './Components/Customer/CustomerProfile';
+import { AuthProvider } from './Components/AdminAuth/AuthContext';
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/Registration" element={<Registration />} />
-        <Route path="/Verify" element={<Verify />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/Registration" element={<Registration />} />
+          <Route path="/Verify" element={<Verify />} />
 
-        {/* Outlet Manager Routes */}
-        <Route path="/outlet-dashboard" element={<Overview />} />
-        <Route path="/orders" element={<CustomerOrders />} />
-        <Route path="/customers" element={<Customers />} />
-        <Route path="/manage_accounts" element={<ManageStock />} />
-        <Route path="/business_orders" element={<BusinessOrders />} />
-        <Route path="/stock_orders" element={<StockOrders />} />
-        <Route path="/delete" element={<Delete />} />
-        <Route path="/waitlist_manage" element={<Waitlist />} />
+          {/* Outlet Manager Routes */}
+          <Route path="/outlet-dashboard" element={<Overview />} />
+          <Route path="/orders" element={<CustomerOrders />} />
+          <Route path="/customers" element={<Customers />} />
+          <Route path="/manage_accounts" element={<ManageStock />} />
+          <Route path="/business_orders" element={<BusinessOrders />} />
+          <Route path="/stock_orders" element={<StockOrders />} />
+          <Route path="/delete" element={<Delete />} />
+          <Route path="/waitlist_manage" element={<Waitlist />} />
 
-        {/* Admin Routes */}
-        <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
-        <Route path="/admin/account_manage" element={<AccountManage />} />
-        <Route path="/admin/reports" element={<Report />} />
-        <Route path="/admin/outlet_manager" element={<OutletManage />} />
-        <Route path="/admin/outlet" element={<AdminOutlet />} />
+          {/* Admin Routes */}
+          <Route path="/admin/stock_requests" element={<StockOrderRequests />} />
+          <Route path="/admin/account_manage" element={<AccountManage />} />
+          <Route path="/admin/reports" element={<Report />} />
+          <Route path="/admin/outlet_manager" element={<OutletManage />} />
+          <Route path="/admin/outlet" element={<AdminOutlet />} />
 
-        {/* Customer Routes */}
-        <Route path="/customer/overview" element={<CusOrders />} />
-        <Route path="/customer/order_history" element={<OrderHistory />} />
-        <Route path="/customer/profile" element={<CusProfile />} />
-      </Routes>
-    </Router>
+          {/* Customer Routes */}
+          <Route path="/customer/overview" element={<CusOrders />} />
+          <Route path="/customer/order_history" element={<OrderHistory />} />
+          <Route path="/customer/profile" element={<CusProfile />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 

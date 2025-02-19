@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import style from "./CustomerDashboard.module.css";
 import order from "../../assets/Pannel/order.svg";
 import Customer from "../../assets/Pannel/customer.svg";
@@ -8,9 +8,16 @@ import stock from "../../assets/Pannel/stock.svg";
 import orderstock from "../../assets/Pannel/orderstock.svg";
 import waitlist from "../../assets/Pannel/waitlist.svg";
 import logOut from "../../assets/Pannel/logOut.svg";
-
+import { useAuth } from '../../Components/AdminAuth/AuthContext';
 
 function CustomerDashboard({ selectedOption, setSelectedOption }) {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <div className={style.Maindashboard}>
@@ -33,7 +40,7 @@ function CustomerDashboard({ selectedOption, setSelectedOption }) {
             <img src={order} alt="" className={style.panelIcon} />
             <span className={`${style.option} ${selectedOption === "Profile" ? style.selected : ""}`}>My Profile</span>
           </Link>
-          <div className={style.Logout}>
+          <div className={style.Logout} onClick={handleLogout}>
             <span>Logout</span>
             <img src={logOut} className={style.logOutI} alt="LogOut icon" />
           </div>
